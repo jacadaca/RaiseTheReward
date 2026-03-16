@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
@@ -37,12 +38,18 @@ export default function Home() {
 
         {/* CTA buttons */}
         <div className="flex gap-2 justify-center mb-9">
-          <button className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white border-none">
+          <Link
+            href="/submit"
+            className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white border-none"
+          >
             Start a reward fund
-          </button>
-          <button className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border border-gray-300">
+          </Link>
+          <Link
+            href="/cases"
+            className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border border-gray-300"
+          >
             See open cases
-          </button>
+          </Link>
         </div>
         <p className="text-[12px] text-gray-400 mb-0">
           Free to start &middot; 4% platform fee &middot; Powered by Stripe
@@ -51,9 +58,10 @@ export default function Home() {
         {/* Hero case cards */}
         <div className="flex gap-3 mt-9 overflow-hidden">
           {CASES.slice(0, 4).map((c) => (
-            <div
+            <Link
               key={c.id}
-              className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-t-xl p-4 text-left"
+              href={`/case/${c.id}`}
+              className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-t-xl p-4 text-left hover:border-gray-300 transition-colors"
             >
               <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2">
                 <span className="w-[5px] h-[5px] rounded-full bg-[var(--color-brand)] inline-block" />
@@ -77,10 +85,10 @@ export default function Home() {
                   style={{ width: `${c.pct}%` }}
                 />
               </div>
-              <button className="w-full text-center py-1.5 rounded-full bg-black text-white text-[12px] font-medium">
+              <span className="block w-full text-center py-1.5 rounded-full bg-black text-white text-[12px] font-medium">
                 Donate to this reward &rarr;
-              </button>
-            </div>
+              </span>
+            </Link>
           ))}
         </div>
       </section>
@@ -245,12 +253,18 @@ export default function Home() {
           the person who brings answers.
         </p>
         <div className="flex gap-2.5 justify-center">
-          <button className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border-none">
+          <Link
+            href="/submit"
+            className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border-none"
+          >
             Start a reward fund
-          </button>
-          <button className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white/15 text-white border border-white/30">
+          </Link>
+          <Link
+            href="/cases"
+            className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white/15 text-white border border-white/30"
+          >
             Browse open cases
-          </button>
+          </Link>
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
@@ -33,9 +34,12 @@ export default function CasesPage() {
               47 active reward pools &middot; $251,750 total held
             </p>
           </div>
-          <button className="px-4 py-2 rounded-full text-[13px] font-medium bg-[var(--color-brand)] text-white">
+          <Link
+            href="/submit"
+            className="px-4 py-2 rounded-full text-[13px] font-medium bg-[var(--color-brand)] text-white"
+          >
             + Submit a case
-          </button>
+          </Link>
         </div>
         <div className="flex gap-2 mt-4 flex-wrap">
           {FILTERS.map((f) => (

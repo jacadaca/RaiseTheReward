@@ -14,7 +14,7 @@ export default function Nav() {
           Browse cases
         </Link>
         <Link
-          href="/"
+          href="/how-it-works"
           className="text-[13px] text-gray-500 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
         >
           How it works
@@ -25,12 +25,18 @@ export default function Nav() {
         >
           Submit a case
         </Link>
-        <button className="ml-1.5 text-[13px] px-3 py-1.5 rounded-full border border-gray-300 text-black hover:bg-gray-50">
-          Sign in
-        </button>
-        <button className="ml-1 text-[13px] px-3 py-1.5 rounded-full bg-black text-white font-medium">
+        <Link
+          href="/claim"
+          className="ml-1.5 text-[13px] px-3 py-1.5 rounded-full border border-gray-300 text-black hover:bg-gray-50"
+        >
+          Claim reward
+        </Link>
+        <Link
+          href="/submit"
+          className="ml-1 text-[13px] px-3 py-1.5 rounded-full bg-black text-white font-medium"
+        >
           Start a reward
-        </button>
+        </Link>
       </div>
     </nav>
   );

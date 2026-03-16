@@ -31,13 +31,13 @@ export default function Footer() {
             Submit a case
           </Link>
           <Link
-            href="/"
+            href="/how-it-works"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             How it works
           </Link>
           <Link
-            href="/"
+            href="/pricing"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Pricing &amp; fees
@@ -48,19 +48,19 @@ export default function Footer() {
             Trust &amp; Safety
           </h4>
           <Link
-            href="/"
+            href="/how-it-works"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             How payouts work
           </Link>
           <Link
-            href="/"
+            href="/admin"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Board oversight
           </Link>
           <Link
-            href="/"
+            href="/how-it-works"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Fraud prevention
@@ -71,19 +71,19 @@ export default function Footer() {
             Legal
           </h4>
           <Link
-            href="/"
+            href="/terms"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Terms of Service
           </Link>
           <Link
-            href="/"
+            href="/privacy"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Privacy Policy
           </Link>
           <Link
-            href="/"
+            href="/privacy"
             className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
           >
             Cookie Policy
