@@ -24,7 +24,7 @@ export default function Home() {
           financial reward for information that leads to the resolution of any
           missing persons, unsolved crime and wanted individual case. People
           donate funds towards the reward for a specific case, and that reward
-          money is only paid out when the case is closed.
+          money is only paid out when that case is closed.
         </p>
 
         <Link
