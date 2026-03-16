@@ -5,39 +5,36 @@ export default function CaseCard({ c }: { c: Case }) {
   return (
     <Link
       href={`/case/${c.id}`}
-      className="block border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+      className="block rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white"
     >
+      {/* Photo placeholder */}
       <div
-        className="h-[120px] flex items-center justify-center text-4xl relative"
-        style={{
-          background: c.type === "Lost Pet" ? "#f5f5f5" : "#111",
-        }}
+        className="h-[180px] flex items-center justify-center relative"
+        style={{ background: c.color }}
       >
-        <span>{c.emoji}</span>
-        <div className="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-medium px-2 py-0.5 rounded-full uppercase">
-          {c.type}
+        <span className="text-white/30 text-[64px] font-serif font-bold">
+          {c.initials}
+        </span>
+        <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[11px] font-medium px-2.5 py-1 rounded-full">
+          {c.loc}
         </div>
       </div>
-      <div className="p-3.5">
-        <div className="text-[14px] font-semibold text-black mb-0.5">
+
+      <div className="p-4">
+        <div className="text-[15px] font-semibold text-black leading-tight mb-1">
           {c.name}
         </div>
-        <div className="text-[12px] text-gray-400 mb-2.5">{c.loc}</div>
-        <div className="flex justify-between items-baseline mb-1.5">
-          <div className="text-[18px] font-semibold text-black">{c.reward}</div>
-          <div className="text-[12px] text-gray-400">{c.donors} donors</div>
-        </div>
-        <div className="h-[3px] bg-gray-200 rounded-sm mb-2.5">
+
+        {/* Progress bar */}
+        <div className="h-[5px] bg-gray-100 rounded-full mt-3 mb-2">
           <div
-            className="h-[3px] bg-[var(--color-brand)] rounded-sm"
+            className="h-[5px] bg-[var(--color-brand)] rounded-full"
             style={{ width: `${c.pct}%` }}
           />
         </div>
-        <div className="flex justify-between items-center">
-          <div className="text-[11px] text-gray-400">{c.days} days open</div>
-          <span className="bg-black text-white text-[12px] px-3.5 py-1 rounded-full">
-            Donate
-          </span>
+
+        <div className="text-[14px] font-semibold text-black">
+          {c.reward} raised
         </div>
       </div>
     </Link>

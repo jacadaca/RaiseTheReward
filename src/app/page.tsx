@@ -11,142 +11,98 @@ export default function Home() {
       <Nav />
 
       {/* ── HERO ── */}
-      <section className="bg-white pt-14 pb-0 px-8 text-center overflow-hidden">
-        <div className="inline-flex items-center gap-1.5 bg-gray-100 border border-gray-200 text-gray-500 text-[12px] font-medium px-3 py-1 rounded-full mb-5">
-          47 active reward pools &middot; $251,750 held for justice
+      <section className="bg-white pt-16 pb-0 px-8 text-center overflow-hidden">
+        <div className="text-[13px] text-[var(--color-brand)] font-semibold tracking-wide uppercase mb-4">
+          The #1 crowdsourced reward platform
         </div>
-        <h1 className="font-serif text-[clamp(28px,4vw,52px)] text-black leading-[1.1] tracking-tight max-w-[680px] mx-auto mb-4">
-          The public wants to help.
-          <br />
+        <h1 className="font-serif text-[clamp(32px,5vw,64px)] text-black leading-[1.05] tracking-tight max-w-[700px] mx-auto mb-5">
+          The public wants to help.{" "}
           <span className="text-[var(--color-brand)]">Give them a way.</span>
         </h1>
-        <p className="text-[15px] text-gray-500 max-w-[460px] mx-auto mb-7">
+        <p className="text-[17px] text-gray-500 max-w-[500px] mx-auto mb-8 leading-relaxed">
           Crowdfund a reward for information leading to the resolution of
           missing persons, unsolved crimes, and more. Every dollar irrevocable.
           Paid only on results.
         </p>
 
-        {/* Search */}
-        <SearchBar />
+        <Link
+          href="/submit"
+          className="inline-flex px-8 py-3.5 rounded-full text-[16px] font-semibold bg-[var(--color-brand)] text-white mb-4"
+        >
+          Start a reward
+        </Link>
 
-        {/* CTA buttons */}
-        <div className="flex gap-2 justify-center mb-9">
-          <Link
-            href="/submit"
-            className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white border-none"
-          >
-            Start a reward fund
-          </Link>
-          <Link
-            href="/cases"
-            className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border border-gray-300"
-          >
-            See open cases
-          </Link>
-        </div>
-        <p className="text-[12px] text-gray-400 mb-0">
+        <div className="text-[13px] text-gray-400 mb-12">
           Free to start &middot; 4% platform fee &middot; Powered by Stripe
-        </p>
+        </div>
 
-        {/* Hero case cards */}
-        <div className="flex gap-3 mt-9 overflow-hidden">
-          {CASES.slice(0, 4).map((c) => (
+        {/* Hero case circles — like GoFundMe's photo circles */}
+        <div className="flex justify-center gap-5 mb-0 pb-0">
+          {CASES.slice(0, 5).map((c) => (
             <Link
               key={c.id}
               href={`/case/${c.id}`}
-              className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-t-xl p-4 text-left hover:border-gray-300 transition-colors"
+              className="group flex flex-col items-center"
             >
-              <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2">
-                <span className="w-[5px] h-[5px] rounded-full bg-[var(--color-brand)] inline-block" />
+              <div className="relative w-[100px] h-[100px] mb-2">
+                {/* Progress ring */}
+                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="46" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+                  <circle
+                    cx="50" cy="50" r="46"
+                    fill="none"
+                    stroke="var(--color-brand)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeDasharray={`${c.pct * 2.89} 289`}
+                  />
+                </svg>
+                {/* Avatar */}
+                <div
+                  className="absolute inset-[6px] rounded-full flex items-center justify-center text-white font-serif text-[24px] font-bold group-hover:scale-105 transition-transform"
+                  style={{ background: c.color }}
+                >
+                  {c.initials}
+                </div>
+              </div>
+              <div className="text-[12px] font-medium text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full">
                 {c.type}
               </div>
-              <div className="text-[14px] font-semibold text-black mb-0.5">
-                {c.name}
-              </div>
-              <div className="text-[11px] text-gray-400 mb-2.5">
-                {c.loc} &middot; {c.days}d open
-              </div>
-              <div className="text-[22px] font-semibold text-black tracking-tight">
-                {c.reward}
-              </div>
-              <div className="text-[11px] text-gray-400 mb-2">
-                {c.donors} donors
-              </div>
-              <div className="h-[3px] bg-gray-200 rounded-sm mb-2.5">
-                <div
-                  className="h-[3px] bg-[var(--color-brand)] rounded-sm"
-                  style={{ width: `${c.pct}%` }}
-                />
-              </div>
-              <span className="block w-full text-center py-1.5 rounded-full bg-black text-white text-[12px] font-medium">
-                Donate to this reward &rarr;
-              </span>
             </Link>
           ))}
         </div>
       </section>
 
       {/* ── TRUST BAR ── */}
-      <section className="bg-gray-50 border-t border-b border-gray-200 py-4.5 px-8 flex justify-center gap-10 flex-wrap">
+      <section className="bg-amber-50/60 border-t border-b border-amber-100/80 py-5 px-8 flex justify-center gap-12 flex-wrap">
         {[
-          { v: "$251,750", l: "Total held in reward pools" },
-          { v: "2,907", l: "Donors across all cases" },
-          { v: "47", l: "Active cases" },
-          { v: "$35,050", l: "Rewards paid to tipsters" },
-          { v: "100%", l: "Paid on verified resolution" },
+          { icon: "\u26A1", v: "Free to start", l: "No fee to create a reward" },
+          { icon: "\u{1F512}", v: "$251,750 held", l: "In active reward pools" },
+          { icon: "\u{1F91D}", v: "2,907 donors", l: "Across all cases" },
+          { icon: "\u2705", v: "100% verified", l: "Paid only on resolution" },
         ].map((s) => (
-          <div key={s.l} className="text-center">
-            <div className="font-serif text-[22px] text-black">{s.v}</div>
-            <div className="text-[11px] text-gray-400 mt-0.5">{s.l}</div>
+          <div key={s.v} className="flex items-center gap-2.5">
+            <span className="text-[22px]">{s.icon}</span>
+            <div>
+              <div className="text-[14px] font-semibold text-gray-900">{s.v}</div>
+              <div className="text-[12px] text-gray-500">{s.l}</div>
+            </div>
           </div>
         ))}
       </section>
 
-      {/* ── OPEN CASES ── */}
-      <section className="py-12 px-8 text-center">
-        <div className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-2.5">
-          Open reward pools
-        </div>
-        <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight leading-[1.15] mb-3">
-          Every dollar waits for justice
-        </h2>
-        <p className="text-[15px] text-gray-500 max-w-[480px] mx-auto mb-9">
-          Contribute to any case. Your donation is locked in &mdash;
-          irrevocable, transparent, paid only when the case resolves.
-        </p>
-        <div className="grid grid-cols-3 gap-4 max-w-[960px] mx-auto">
-          {CASES.map((c) => (
-            <CaseCard key={c.id} c={c} />
-          ))}
-        </div>
-      </section>
-
-      {/* ── QUOTE ── */}
-      <section className="bg-black py-12 px-8 text-center">
-        <blockquote className="font-serif text-[clamp(18px,2.5vw,28px)] text-white max-w-[680px] mx-auto mb-3.5 leading-[1.35] tracking-tight">
-          &ldquo;When a family goes on CNN and says &lsquo;please help find our
-          daughter&rsquo; &mdash; where does that public energy go? Until now,
-          nowhere.&rdquo;
-        </blockquote>
-        <cite className="text-[13px] text-gray-500 not-italic">
-          &mdash; RaiseTheReward.com &middot; The first purpose-built
-          crowdsourced reward platform in the US
-        </cite>
-      </section>
-
       {/* ── HOW IT WORKS ── */}
-      <section className="py-12 px-8 text-center bg-gray-50">
-        <div className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-2.5">
-          How it works
-        </div>
-        <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight leading-[1.15] mb-3">
-          Simple. Transparent. Paid only on results.
+      <section className="py-16 px-8 max-w-[900px] mx-auto">
+        <h2 className="font-serif text-[clamp(26px,3.5vw,40px)] tracking-tight text-center mb-3">
+          Crowdfunding rewards is easy,
+          <br />
+          powerful, and trusted
         </h2>
-        <p className="text-[15px] text-gray-500 max-w-[480px] mx-auto mb-9">
+        <p className="text-[16px] text-gray-500 text-center max-w-[520px] mx-auto mb-12">
           Unlike GoFundMe, your money never goes to the family &mdash; it goes
           to the person who actually solves the case.
         </p>
-        <div className="grid grid-cols-3 gap-6 max-w-[760px] mx-auto">
+        <div className="grid grid-cols-3 gap-10">
           {[
             {
               n: 1,
@@ -165,11 +121,11 @@ export default function Home() {
             },
           ].map((s) => (
             <div key={s.n} className="text-center">
-              <div className="w-10 h-10 rounded-full bg-black text-white text-[16px] font-semibold flex items-center justify-center mx-auto mb-3">
+              <div className="w-11 h-11 rounded-full bg-black text-white text-[16px] font-bold flex items-center justify-center mx-auto mb-4">
                 {s.n}
               </div>
-              <div className="text-[15px] font-semibold mb-1.5">{s.t}</div>
-              <div className="text-[13px] text-gray-500 leading-relaxed">
+              <div className="text-[16px] font-semibold mb-2">{s.t}</div>
+              <div className="text-[14px] text-gray-500 leading-relaxed">
                 {s.b}
               </div>
             </div>
@@ -177,84 +133,127 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── COMPARISON ── */}
-      <section className="py-12 px-8 text-center">
-        <div className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-2.5">
-          Why not GoFundMe?
-        </div>
-        <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight leading-[1.15] mb-3">
-          GoFundMe was built for donations.
-          <br />
-          We were built for rewards.
-        </h2>
-        <p className="text-[15px] text-gray-500 max-w-[480px] mx-auto mb-9">
-          The difference goes far deeper than features.
-        </p>
-        <div className="grid grid-cols-2 gap-5 max-w-[760px] mx-auto">
-          {/* GoFundMe */}
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-left">
-            <div className="text-[16px] font-semibold text-gray-400 mb-3.5">
-              GoFundMe
+      {/* ── DISCOVER CASES ── */}
+      <section className="py-14 px-8 bg-gray-50">
+        <div className="max-w-[1000px] mx-auto">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight">
+                Discover open reward pools
+              </h2>
+              <p className="text-[15px] text-gray-500 mt-1">
+                Contribute to any case. Your donation is locked in &mdash;
+                irrevocable, transparent, paid only when the case resolves.
+              </p>
             </div>
-            {[
-              "Money goes to the family \u2014 not the solver",
-              "No conditional payout mechanism",
-              "Donations are revocable",
-              "No verification of who deserves payout",
-              "Looks like personal fundraising",
-            ].map((s) => (
-              <div
-                key={s}
-                className="flex gap-2 mb-2 text-[13px] text-gray-400"
-              >
-                <span className="text-gray-300">{"\u00D7"}</span>
-                <span>{s}</span>
-              </div>
-            ))}
+            <Link
+              href="/cases"
+              className="text-[14px] font-medium text-[var(--color-brand)] hover:underline shrink-0"
+            >
+              See all &rarr;
+            </Link>
           </div>
-          {/* RTR */}
-          <div className="bg-black border border-gray-800 rounded-xl p-5 text-left">
-            <div className="text-[16px] font-semibold text-white mb-3.5">
-              RaiseTheReward
-            </div>
-            {[
-              "Money paid directly to the verified solver",
-              "Payout only on verified case resolution",
-              "All donations irrevocable \u2014 locked in the pool",
-              "Board review of official LE documentation",
-              "Family separated from money by design",
-            ].map((s) => (
-              <div
-                key={s}
-                className="flex gap-2 mb-2 text-[13px] text-gray-400"
-              >
-                <span className="text-[var(--color-brand)]">{"\u2713"}</span>
-                <span>{s}</span>
-              </div>
+
+          {/* Search */}
+          <div className="mb-8">
+            <SearchBar />
+          </div>
+
+          <div className="grid grid-cols-3 gap-5">
+            {CASES.map((c) => (
+              <CaseCard key={c.id} c={c} />
             ))}
           </div>
         </div>
       </section>
 
+      {/* ── QUOTE ── */}
+      <section className="bg-black py-16 px-8 text-center">
+        <blockquote className="font-serif text-[clamp(20px,2.5vw,32px)] text-white max-w-[680px] mx-auto mb-4 leading-[1.35] tracking-tight">
+          &ldquo;When a family goes on CNN and says &lsquo;please help find our
+          daughter&rsquo; &mdash; where does that public energy go? Until now,
+          nowhere.&rdquo;
+        </blockquote>
+        <cite className="text-[14px] text-gray-500 not-italic">
+          &mdash; RaiseTheReward.com
+        </cite>
+      </section>
+
+      {/* ── COMPARISON ── */}
+      <section className="py-16 px-8">
+        <div className="max-w-[800px] mx-auto">
+          <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight text-center mb-3">
+            GoFundMe was built for donations.
+            <br />
+            We were built for rewards.
+          </h2>
+          <p className="text-[15px] text-gray-500 text-center max-w-[480px] mx-auto mb-10">
+            The difference goes far deeper than features.
+          </p>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-left">
+              <div className="text-[18px] font-semibold text-gray-400 mb-4">
+                GoFundMe
+              </div>
+              {[
+                "Money goes to the family \u2014 not the solver",
+                "No conditional payout mechanism",
+                "Donations are revocable",
+                "No verification of who deserves payout",
+                "Looks like personal fundraising",
+              ].map((s) => (
+                <div
+                  key={s}
+                  className="flex gap-2.5 mb-2.5 text-[14px] text-gray-400"
+                >
+                  <span className="text-gray-300">{"\u00D7"}</span>
+                  <span>{s}</span>
+                </div>
+              ))}
+            </div>
+            <div className="bg-black border border-gray-800 rounded-2xl p-6 text-left">
+              <div className="text-[18px] font-semibold text-white mb-4">
+                RaiseTheReward
+              </div>
+              {[
+                "Money paid directly to the verified solver",
+                "Payout only on verified case resolution",
+                "All donations irrevocable \u2014 locked in the pool",
+                "Board review of official LE documentation",
+                "Family separated from money by design",
+              ].map((s) => (
+                <div
+                  key={s}
+                  className="flex gap-2.5 mb-2.5 text-[14px] text-gray-400"
+                >
+                  <span className="text-[var(--color-brand)]">{"\u2713"}</span>
+                  <span>{s}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ── */}
-      <section className="bg-[var(--color-brand)] py-14 px-8 text-center">
-        <h2 className="font-serif text-[clamp(24px,3vw,40px)] text-white mb-3 tracking-tight">
+      <section className="bg-[var(--color-brand)] py-16 px-8 text-center">
+        <h2 className="font-serif text-[clamp(26px,3.5vw,44px)] text-white mb-4 tracking-tight">
           Does someone need to come home?
         </h2>
-        <p className="text-[15px] text-white/70 mb-7 max-w-[400px] mx-auto">
+        <p className="text-[16px] text-white/70 mb-8 max-w-[440px] mx-auto">
           Start a reward fund in minutes. Every dollar irrevocably committed to
           the person who brings answers.
         </p>
-        <div className="flex gap-2.5 justify-center">
+        <div className="flex gap-3 justify-center">
           <Link
             href="/submit"
-            className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border-none"
+            className="px-7 py-3 rounded-full text-[16px] font-semibold bg-white text-black"
           >
             Start a reward fund
           </Link>
           <Link
             href="/cases"
-            className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white/15 text-white border border-white/30"
+            className="px-7 py-3 rounded-full text-[16px] font-semibold bg-white/15 text-white border border-white/30"
           >
             Browse open cases
           </Link>

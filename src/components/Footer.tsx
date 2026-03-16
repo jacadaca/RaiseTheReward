@@ -2,101 +2,47 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0d0d0d] px-8 pt-8 pb-6 text-gray-600">
-      <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-8 mb-7 max-w-6xl mx-auto">
-        <div>
-          <div className="font-serif text-[16px] text-white mb-2">
-            Raise<em className="text-[var(--color-brand)] not-italic">The</em>
-            Reward
-          </div>
-          <p className="text-[12px] text-gray-600 leading-relaxed">
-            The first purpose-built crowdsourced reward platform for missing
-            persons, unsolved crimes, and lost pets in the US.
-          </p>
-        </div>
-        <div>
-          <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
-            Platform
-          </h4>
-          <Link
-            href="/cases"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
+    <footer className="bg-white border-t border-gray-200 px-8 py-6">
+      <div className="max-w-[1000px] mx-auto">
+        {/* Top row: links */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-5 text-[13px]">
+          <Link href="/cases" className="text-gray-500 hover:text-black">
             Browse cases
           </Link>
-          <Link
-            href="/submit"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
+          <Link href="/submit" className="text-gray-500 hover:text-black">
             Submit a case
           </Link>
-          <Link
-            href="/how-it-works"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
+          <Link href="/how-it-works" className="text-gray-500 hover:text-black">
             How it works
           </Link>
-          <Link
-            href="/pricing"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Pricing &amp; fees
+          <Link href="/pricing" className="text-gray-500 hover:text-black">
+            Pricing
+          </Link>
+          <Link href="/claim" className="text-gray-500 hover:text-black">
+            Claim a reward
           </Link>
         </div>
-        <div>
-          <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
-            Trust &amp; Safety
-          </h4>
-          <Link
-            href="/how-it-works"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            How payouts work
-          </Link>
-          <Link
-            href="/admin"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Board oversight
-          </Link>
-          <Link
-            href="/how-it-works"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Fraud prevention
-          </Link>
+
+        {/* Bottom row */}
+        <div className="flex items-center justify-between border-t border-gray-100 pt-5">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="font-serif text-[15px] text-black">
+              raise<em className="text-[var(--color-brand)] not-italic">the</em>reward
+            </Link>
+            <span className="text-[12px] text-gray-400">
+              &copy; 2025 RaiseTheReward, Inc. &middot; Delaware C-Corp
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-[12px]">
+            <Link href="/terms" className="text-gray-400 hover:text-gray-600">
+              Terms
+            </Link>
+            <Link href="/privacy" className="text-gray-400 hover:text-gray-600">
+              Privacy
+            </Link>
+            <span className="text-gray-300">Powered by Stripe</span>
+          </div>
         </div>
-        <div>
-          <h4 className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2.5">
-            Legal
-          </h4>
-          <Link
-            href="/terms"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Terms of Service
-          </Link>
-          <Link
-            href="/privacy"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/privacy"
-            className="block text-[13px] text-gray-600 mb-1.5 hover:text-gray-400"
-          >
-            Cookie Policy
-          </Link>
-        </div>
-      </div>
-      <div className="border-t border-gray-800 pt-5 flex justify-between max-w-6xl mx-auto">
-        <p className="text-[12px] text-gray-700">
-          &copy; 2025 RaiseTheReward.com &middot; Delaware C-Corp
-        </p>
-        <p className="text-[12px] text-gray-700">
-          Powered by Stripe &middot; Not a 501(c)(3)
-        </p>
       </div>
     </footer>
   );

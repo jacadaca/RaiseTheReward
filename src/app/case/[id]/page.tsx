@@ -6,15 +6,6 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { CASES } from "@/lib/cases";
 
-const TABS = [
-  "Case info",
-  "Official tip directory",
-  "Official updates",
-  "Media & articles",
-  "Community discussion",
-  "Donor wall",
-];
-
 export default function CaseHubPage({
   params,
 }: {
@@ -22,406 +13,303 @@ export default function CaseHubPage({
 }) {
   const { id } = use(params);
   const c = CASES.find((cs) => cs.id === id) ?? CASES[0];
-  const [tab, setTab] = useState(0);
+  const [showFullSummary, setShowFullSummary] = useState(false);
+
+  const recentDonors = [
+    { name: "Anonymous", amt: "$500", time: "1 hour ago" },
+    { name: "Jennifer T.", amt: "$100", time: "3 hours ago" },
+    { name: "The Williams Family", amt: "$250", time: "6 hours ago" },
+    { name: "Anonymous", amt: "$25", time: "1 day ago" },
+    { name: "David K.", amt: "$50", time: "1 day ago" },
+  ];
 
   return (
     <>
       <Nav />
 
-      {/* Hero header */}
-      <div className="bg-white border-b border-gray-100 px-8 py-5">
-        <div className="flex items-start gap-1.5 mb-1">
-          <Link
-            href="/cases"
-            className="text-[12px] text-gray-400 hover:text-gray-600"
-          >
-            &larr; All cases
-          </Link>
-        </div>
-        <div className="grid grid-cols-[1fr_260px] gap-6 items-start">
-          <div>
-            <div className="flex gap-1.5 mb-2.5">
-              <span className="inline-flex px-2.5 py-0.5 rounded text-[11px] bg-gray-100 text-gray-500">
-                {c.type}
-              </span>
-              <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 text-black">
-                Active
-              </span>
-            </div>
-            <h1 className="font-serif text-[30px] tracking-tight mb-1.5">
-              {c.name}
-            </h1>
-            <p className="text-[14px] text-gray-400">
-              {c.loc} &middot; Case opened {c.days} days ago
-            </p>
-          </div>
+      <div className="max-w-[960px] mx-auto px-8 py-6">
+        {/* Back link */}
+        <Link
+          href="/cases"
+          className="text-[13px] text-gray-400 hover:text-gray-600 mb-4 inline-block"
+        >
+          &larr; All cases
+        </Link>
 
-          {/* Reward box */}
-          <div className="bg-white border-[1.5px] border-gray-200 rounded-xl p-4.5 sticky top-[76px]">
-            <div className="text-[11px] text-gray-400 mb-1">
-              Total reward pool
-            </div>
-            <div className="font-serif text-[36px] text-gray-900 tracking-tight">
-              {c.reward}
-            </div>
-            <div className="text-[12px] text-gray-400 mb-2">
-              {c.donors} donors &middot; Growing in real time
-            </div>
-            <div className="h-1 bg-gray-100 rounded-sm mb-3">
-              <div
-                className="h-1 bg-[var(--color-brand)] rounded-sm"
-                style={{ width: `${c.pct}%` }}
-              />
-            </div>
-            <Link
-              href={`/case/${c.id}/donate`}
-              className="flex items-center justify-center w-full py-2 rounded-full bg-[var(--color-brand)] text-white text-[13px] font-medium mb-1.5"
+        {/* Title */}
+        <h1 className="font-serif text-[clamp(24px,3.5vw,36px)] tracking-tight mb-4">
+          {c.name}
+        </h1>
+
+        <div className="grid grid-cols-[1fr_320px] gap-8">
+          {/* ── Left column: content ── */}
+          <div>
+            {/* Case photo placeholder */}
+            <div
+              className="w-full h-[340px] rounded-2xl flex items-center justify-center mb-4 relative"
+              style={{ background: c.color }}
             >
-              Donate to this reward
-            </Link>
-            <div className="text-[11px] text-gray-300 text-center">
-              All donations irrevocable &middot; 4% fee
+              <span className="text-white/20 text-[120px] font-serif font-bold">
+                {c.initials}
+              </span>
+              <div className="absolute top-4 left-4 flex gap-2">
+                <span className="bg-white/90 backdrop-blur text-[12px] font-medium px-3 py-1 rounded-full text-black">
+                  {c.type}
+                </span>
+                <span className="bg-white/90 backdrop-blur text-[12px] font-medium px-3 py-1 rounded-full text-black">
+                  Active
+                </span>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Tabs + content */}
-      <div className="px-8">
-        <div className="flex border-b-[1.5px] border-gray-100 mb-4.5 overflow-x-auto">
-          {TABS.map((t, i) => (
-            <button
-              key={t}
-              onClick={() => setTab(i)}
-              className={`px-3.5 py-2 text-[13px] border-b-2 whitespace-nowrap ${
-                tab === i
-                  ? "text-gray-900 border-gray-900 font-medium"
-                  : "text-gray-400 border-transparent hover:text-gray-600"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+            {/* Organizer + trust badge */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-[13px] font-bold text-gray-500">
+                R
+              </div>
+              <div>
+                <div className="text-[14px] font-medium">RTR Board</div>
+                <div className="text-[12px] text-gray-400">
+                  Verified &middot; {c.loc}
+                </div>
+              </div>
+            </div>
 
-        <div className="grid grid-cols-[1fr_260px] gap-6">
-          <div>
-            {/* ── Tab 0: Case info ── */}
-            {tab === 0 && (
-              <>
-                <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                    About this case
-                  </div>
-                  <p className="text-[14px] mb-3.5">{c.summary}</p>
-                  <div className="grid grid-cols-2 gap-2.5">
-                    {[
-                      { l: "Case type", v: c.type },
-                      { l: "Status", v: "Active" },
-                      { l: "Location", v: c.loc },
-                      { l: "Days open", v: String(c.days) },
-                    ].map((item) => (
-                      <div key={item.l}>
-                        <div className="text-[11px] text-gray-400">
-                          {item.l}
-                        </div>
-                        <div className="text-[13px] font-medium">{item.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            {/* Trust badge */}
+            <div className="inline-flex items-center gap-1.5 text-[13px] text-green-700 bg-green-50 border border-green-200 px-3 py-1.5 rounded-lg mb-6">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              Board verified &middot; Donations protected
+            </div>
 
-                <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                    Reward payout criteria
-                  </div>
-                  {[
-                    "Law enforcement confirms the case resolution",
-                    "Tipster identified and confirmed by law enforcement",
-                    "Claimant submits official documentation to RTR",
-                    "Platform board reviews and approves disbursement",
-                  ].map((s, i) => (
-                    <div key={i} className="flex gap-2 mb-1.5 text-[13px]">
-                      <span className="text-gray-400">{i + 1}.</span>
-                      <span>{s}</span>
-                    </div>
-                  ))}
-                </div>
+            {/* Summary */}
+            <div className="mb-6">
+              <p className="text-[15px] text-gray-700 leading-relaxed">
+                {showFullSummary
+                  ? c.summary +
+                    " All tips should be submitted directly to law enforcement. RTR is not a tip intake platform and does not evaluate tips. The reward pool is held by RTR and will only be disbursed upon verified case resolution with official documentation reviewed and approved by the RTR board."
+                  : c.summary}
+              </p>
+              <button
+                onClick={() => setShowFullSummary(!showFullSummary)}
+                className="text-[14px] font-medium text-black mt-2 hover:underline"
+              >
+                {showFullSummary ? "Show less" : "Read more"}
+              </button>
+            </div>
 
-                <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-3">
-                  <strong>Important:</strong> RTR is not a tip intake platform.
-                  Submit all tips directly to law enforcement via the
-                  &ldquo;Official tip directory&rdquo; tab.
-                </div>
-              </>
-            )}
+            {/* Inline Donate + Share buttons */}
+            <div className="flex gap-3 mb-8 pb-8 border-b border-gray-100">
+              <Link
+                href={`/case/${c.id}/donate`}
+                className="flex-1 text-center py-3 rounded-full text-[15px] font-semibold border-[1.5px] border-gray-200 text-black hover:bg-gray-50"
+              >
+                Donate
+              </Link>
+              <button className="flex-1 text-center py-3 rounded-full text-[15px] font-semibold border-[1.5px] border-gray-200 text-black hover:bg-gray-50">
+                Share
+              </button>
+            </div>
 
-            {/* ── Tab 1: Tip directory ── */}
-            {tab === 1 && (
-              <>
-                <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                    Where to submit tips
-                  </div>
-                  <p className="text-[14px] text-gray-500 mb-3.5">
-                    RTR does not accept tips. If you have information about this
-                    case, contact the appropriate agency directly:
-                  </p>
-                  {[
-                    {
-                      agency: "Local Law Enforcement",
-                      detail: `${c.loc} Police Department`,
-                      phone: "(555) 555-0100",
-                    },
-                    {
-                      agency: "FBI",
-                      detail: "Federal Bureau of Investigation tip line",
-                      phone: "1-800-CALL-FBI",
-                    },
-                    {
-                      agency: "Crime Stoppers",
-                      detail: "Anonymous tip submission",
-                      phone: "1-800-222-TIPS",
-                    },
-                  ].map((a) => (
-                    <div
-                      key={a.agency}
-                      className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
-                    >
-                      <div>
-                        <div className="text-[14px] font-medium">
-                          {a.agency}
-                        </div>
-                        <div className="text-[12px] text-gray-400">
-                          {a.detail}
-                        </div>
-                      </div>
-                      <div className="text-[13px] font-medium text-[var(--color-brand)]">
-                        {a.phone}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-3">
-                  <strong>Never</strong> submit tips through RTR, social media,
-                  or directly to the family. Always go through official law
-                  enforcement channels.
-                </div>
-              </>
-            )}
-
-            {/* ── Tab 2: Updates ── */}
-            {tab === 2 && (
-              <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                  Official updates
-                </div>
+            {/* Organizer section */}
+            <div className="mb-8 pb-8 border-b border-gray-100">
+              <h3 className="text-[18px] font-semibold mb-3">Case details</h3>
+              <div className="grid grid-cols-2 gap-3">
                 {[
-                  {
-                    date: "Mar 10, 2026",
-                    text: "Reward pool passed $" + c.reward.replace("$", "").replace(",", "") + " mark.",
-                  },
-                  {
-                    date: "Feb 28, 2026",
-                    text: "Case reviewed and renewed by RTR board.",
-                  },
-                  {
-                    date: "Jan 15, 2026",
-                    text: "Case went live on the platform.",
-                  },
-                  {
-                    date: "Jan 12, 2026",
-                    text: "Case submitted and approved by RTR board.",
-                  },
-                ].map((u, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-3 mb-3 last:mb-0 items-start"
-                  >
-                    <div className="w-2 h-2 rounded-full bg-gray-300 mt-1.5 shrink-0" />
-                    <div>
-                      <div className="text-[12px] text-gray-400">{u.date}</div>
-                      <div className="text-[14px]">{u.text}</div>
-                    </div>
+                  { l: "Case type", v: c.type },
+                  { l: "Status", v: "Active" },
+                  { l: "Location", v: c.loc },
+                  { l: "Days open", v: String(c.days) },
+                  { l: "Donors", v: String(c.donors) },
+                  { l: "Platform fee", v: "4%" },
+                ].map((item) => (
+                  <div key={item.l}>
+                    <div className="text-[12px] text-gray-400">{item.l}</div>
+                    <div className="text-[14px] font-medium">{item.v}</div>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
 
-            {/* ── Tab 3: Media ── */}
-            {tab === 3 && (
-              <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                  Media &amp; articles
-                </div>
-                {[
-                  {
-                    t: "Local News: Search continues for " + c.name.split(" \u2014")[0],
-                    src: "Channel 5 News",
-                    date: "Feb 2026",
-                  },
-                  {
-                    t: "Community rallies behind reward fund",
-                    src: "Daily Herald",
-                    date: "Jan 2026",
-                  },
-                  {
-                    t: "Family speaks out on case progress",
-                    src: "AP News",
-                    date: "Jan 2026",
-                  },
-                ].map((a, i) => (
-                  <div
-                    key={i}
-                    className="py-2.5 border-b border-gray-100 last:border-0"
-                  >
-                    <div className="text-[14px] font-medium text-[var(--color-brand)] cursor-pointer hover:underline">
-                      {a.t}
-                    </div>
-                    <div className="text-[12px] text-gray-400">
-                      {a.src} &middot; {a.date}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* ── Tab 4: Discussion ── */}
-            {tab === 4 && (
-              <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                  Community discussion
-                </div>
-                {[
-                  {
-                    user: "Sarah M.",
-                    time: "2 hours ago",
-                    text: "Shared this on my neighborhood Facebook group. Hoping someone knows something.",
-                  },
-                  {
-                    user: "Anonymous",
-                    time: "1 day ago",
-                    text: "Donated $50. Every bit helps. Praying for a resolution.",
-                  },
-                  {
-                    user: "Mike R.",
-                    time: "3 days ago",
-                    text: "I live in the area. Will keep an eye out and share with neighbors.",
-                  },
-                ].map((comment, i) => (
-                  <div
-                    key={i}
-                    className="py-2.5 border-b border-gray-100 last:border-0"
-                  >
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-[13px] font-medium">
-                        {comment.user}
-                      </span>
-                      <span className="text-[11px] text-gray-400">
-                        {comment.time}
-                      </span>
-                    </div>
-                    <p className="text-[14px] text-gray-600">{comment.text}</p>
-                  </div>
-                ))}
-                <div className="mt-3 flex gap-2">
-                  <input
-                    className="flex-1 px-3 py-2 border-[1.5px] border-gray-200 rounded-lg text-[14px] outline-none focus:border-gray-900"
-                    placeholder="Add a comment..."
-                  />
-                  <button className="px-4 py-2 rounded-full bg-black text-white text-[13px] font-medium">
-                    Post
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ── Tab 5: Donor wall ── */}
-            {tab === 5 && (
-              <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                  Donor wall &middot; {c.donors} donors
-                </div>
-                {[
-                  { name: "Anonymous", amt: "$500", time: "1 hour ago" },
-                  { name: "Jennifer T.", amt: "$100", time: "3 hours ago" },
-                  { name: "The Williams Family", amt: "$250", time: "6 hours ago" },
-                  { name: "Anonymous", amt: "$25", time: "1 day ago" },
-                  { name: "David K.", amt: "$50", time: "1 day ago" },
-                  { name: "Maria G.", amt: "$10", time: "2 days ago" },
-                  { name: "Anonymous", amt: "$1,000", time: "3 days ago" },
-                  { name: "Robert P.", amt: "$75", time: "4 days ago" },
-                ].map((d, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
-                  >
-                    <div>
-                      <span className="text-[14px] font-medium">{d.name}</span>
-                      <span className="text-[12px] text-gray-400 ml-2">
-                        {d.time}
-                      </span>
-                    </div>
-                    <span className="text-[14px] font-semibold">{d.amt}</span>
-                  </div>
-                ))}
-                <div className="text-center mt-3">
-                  <button className="text-[13px] text-gray-400 hover:text-gray-600">
-                    View all {c.donors} donors &rarr;
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar timeline */}
-          <div>
-            <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                Timeline
-              </div>
+            {/* Payout criteria */}
+            <div className="mb-8 pb-8 border-b border-gray-100">
+              <h3 className="text-[18px] font-semibold mb-3">Reward payout criteria</h3>
               {[
-                "Case submitted to RTR",
-                "Board review & approval",
-                "Case went live",
-                `Reward passed ${c.reward}`,
-              ].map((e, i) => (
-                <div key={i} className="flex gap-2 mb-2 items-center">
-                  <div className="w-[18px] h-[18px] rounded-full bg-black text-white text-[10px] flex items-center justify-center shrink-0">
-                    {i + 1}
-                  </div>
-                  <span className="text-[13px]">{e}</span>
+                "Law enforcement confirms the case resolution",
+                "Tipster identified and confirmed by law enforcement",
+                "Claimant submits official documentation to RTR",
+                "Platform board reviews and approves disbursement",
+              ].map((s, i) => (
+                <div key={i} className="flex gap-2.5 mb-2 text-[14px] text-gray-600">
+                  <span className="text-gray-400 font-medium">{i + 1}.</span>
+                  <span>{s}</span>
                 </div>
               ))}
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-[10px] p-4">
-              <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
-                Share this case
-              </div>
-              <div className="flex gap-2">
-                {["Twitter", "Facebook", "Copy link"].map((s) => (
-                  <button
-                    key={s}
-                    className="flex-1 py-1.5 rounded-full text-[12px] border border-gray-200 text-gray-600 hover:bg-gray-50"
-                  >
-                    {s}
-                  </button>
+            {/* Tip directory */}
+            <div className="mb-8 pb-8 border-b border-gray-100">
+              <h3 className="text-[18px] font-semibold mb-2">Where to submit tips</h3>
+              <p className="text-[14px] text-gray-500 mb-3">
+                RTR does not accept tips. Contact the appropriate agency directly:
+              </p>
+              {[
+                { agency: "Local Law Enforcement", phone: "(555) 555-0100" },
+                { agency: "FBI Tip Line", phone: "1-800-CALL-FBI" },
+                { agency: "Crime Stoppers", phone: "1-800-222-TIPS" },
+              ].map((a) => (
+                <div
+                  key={a.agency}
+                  className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0"
+                >
+                  <span className="text-[14px] font-medium">{a.agency}</span>
+                  <span className="text-[14px] font-medium text-[var(--color-brand)]">
+                    {a.phone}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Words of support */}
+            <div className="mb-8">
+              <h3 className="text-[18px] font-semibold mb-1">
+                Words of support{" "}
+                <span className="text-[13px] font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full ml-1">
+                  3
+                </span>
+              </h3>
+              <p className="text-[13px] text-gray-400 mb-4">
+                Donate to share words of support.
+              </p>
+              {[
+                {
+                  name: "Sarah M.",
+                  amt: "$50",
+                  time: "2 hours ago",
+                  text: "Shared this on my neighborhood Facebook group. Hoping someone knows something.",
+                },
+                {
+                  name: "Anonymous",
+                  amt: "$25",
+                  time: "1 day ago",
+                  text: "Praying for a resolution. Every bit helps.",
+                },
+                {
+                  name: "Mike R.",
+                  amt: "$100",
+                  time: "3 days ago",
+                  text: "I live in the area. Will keep an eye out.",
+                },
+              ].map((comment, i) => (
+                <div key={i} className="flex gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[12px] font-bold text-gray-400 shrink-0">
+                    {comment.name[0]}
+                  </div>
+                  <div>
+                    <div className="text-[13px]">
+                      <span className="font-medium">{comment.name}</span>
+                      <span className="text-gray-400 ml-1.5">
+                        {comment.amt} &middot; {comment.time}
+                      </span>
+                    </div>
+                    <p className="text-[14px] text-gray-600 mt-0.5">
+                      {comment.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Claim footer */}
+            <div className="border-t border-gray-100 py-5 text-center">
+              <Link
+                href="/claim"
+                className="text-[13px] text-gray-400 hover:text-gray-600 hover:underline"
+              >
+                Are you the qualifying tipster? Submit a claim &rarr;
+              </Link>
+            </div>
+          </div>
+
+          {/* ── Right column: sticky sidebar ── */}
+          <div>
+            <div className="sticky top-[76px]">
+              <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                {/* Progress ring + amount */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="relative w-[60px] h-[60px] shrink-0">
+                    <svg className="w-full h-full -rotate-90" viewBox="0 0 60 60">
+                      <circle cx="30" cy="30" r="26" fill="none" stroke="#e5e7eb" strokeWidth="4" />
+                      <circle
+                        cx="30" cy="30" r="26"
+                        fill="none"
+                        stroke="var(--color-brand)"
+                        strokeWidth="4"
+                        strokeLinecap="round"
+                        strokeDasharray={`${c.pct * 1.63} 163`}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-gray-700">
+                      {c.pct}%
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[22px] font-bold text-black">
+                      {c.reward} raised
+                    </div>
+                    <div className="text-[13px] text-gray-400">
+                      of ${c.goal.toLocaleString()} goal &middot; {c.donors}{" "}
+                      donations
+                    </div>
+                  </div>
+                </div>
+
+                {/* Donate button */}
+                <Link
+                  href={`/case/${c.id}/donate`}
+                  className="flex items-center justify-center w-full py-3 rounded-full bg-[var(--color-brand)] text-white text-[15px] font-semibold mb-2"
+                >
+                  Donate now
+                </Link>
+
+                {/* Share button */}
+                <button className="flex items-center justify-center w-full py-3 rounded-full bg-black text-white text-[15px] font-semibold mb-4">
+                  Share
+                </button>
+
+                {/* Recent donations */}
+                <div className="flex items-center gap-2 text-[13px] text-[var(--color-brand)] font-medium mb-3">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                  </svg>
+                  {c.donors} recent donations
+                </div>
+
+                {recentDonors.slice(0, 4).map((d, i) => (
+                  <div key={i} className="flex items-center gap-2.5 mb-2.5">
+                    <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[11px] font-bold text-gray-400 shrink-0">
+                      {d.name[0]}
+                    </div>
+                    <div className="text-[13px]">
+                      <span className="font-medium">{d.name}</span>
+                      <div className="text-gray-400">
+                        {d.amt} &middot; {d.time}
+                      </div>
+                    </div>
+                  </div>
                 ))}
+
+                <Link
+                  href="#"
+                  className="text-[13px] font-medium text-black hover:underline mt-1 inline-block"
+                >
+                  See all donations &rarr;
+                </Link>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Claim footer */}
-        <div className="border-t border-gray-100 py-5 text-center mt-4 mb-8">
-          <Link
-            href="/claim"
-            className="text-[12px] text-gray-300 hover:text-gray-500 hover:underline"
-          >
-            Are you the qualifying tipster for this case? Learn how to submit a
-            claim.
-          </Link>
         </div>
       </div>
 

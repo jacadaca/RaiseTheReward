@@ -2,38 +2,51 @@ import Link from "next/link";
 
 export default function Nav() {
   return (
-    <nav className="flex items-center justify-between px-8 h-14 bg-white border-b border-gray-200 sticky top-0 z-10">
-      <Link href="/" className="font-serif text-[17px] text-black">
-        Raise<em className="text-[var(--color-brand)] not-italic">The</em>Reward
-      </Link>
-      <div className="flex items-center gap-1">
+    <nav className="flex items-center justify-between px-6 h-[60px] bg-white border-b border-gray-200 sticky top-0 z-50">
+      {/* Left: search + links */}
+      <div className="flex items-center gap-5">
+        <Link href="/cases" aria-label="Search cases" className="text-gray-500 hover:text-black">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+          </svg>
+        </Link>
         <Link
           href="/cases"
-          className="text-[13px] text-gray-500 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
+          className="text-[14px] text-gray-600 hover:text-black"
         >
           Browse cases
         </Link>
         <Link
           href="/how-it-works"
-          className="text-[13px] text-gray-500 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
+          className="text-[14px] text-gray-600 hover:text-black"
         >
           How it works
         </Link>
         <Link
           href="/submit"
-          className="text-[13px] text-gray-500 px-2.5 py-1.5 rounded-md hover:bg-gray-50"
+          className="text-[14px] text-gray-600 hover:text-black"
         >
           Submit a case
         </Link>
+      </div>
+
+      {/* Center: logo */}
+      <Link href="/" className="absolute left-1/2 -translate-x-1/2 font-serif text-[20px] text-black">
+        raise<em className="text-[var(--color-brand)] not-italic font-serif">the</em>reward
+      </Link>
+
+      {/* Right: auth + CTA */}
+      <div className="flex items-center gap-2.5">
         <Link
           href="/sign-in"
-          className="ml-1.5 text-[13px] px-3 py-1.5 rounded-full border border-gray-300 text-black hover:bg-gray-50"
+          className="text-[14px] text-gray-600 hover:text-black"
         >
           Sign in
         </Link>
         <Link
           href="/submit"
-          className="ml-1 text-[13px] px-3 py-1.5 rounded-full bg-black text-white font-medium"
+          className="text-[14px] px-4 py-2 rounded-full bg-[var(--color-brand)] text-white font-semibold hover:opacity-90"
         >
           Start a reward
         </Link>
