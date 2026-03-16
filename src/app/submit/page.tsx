@@ -9,7 +9,6 @@ const CASE_TYPES = [
   { t: "Missing Person", e: "\u{1F50D}" },
   { t: "Unsolved Crime", e: "\u2696\uFE0F" },
   { t: "Wanted Individual", e: "\u{1F6A8}" },
-  { t: "Lost Pet", e: "\u{1F43E}" },
 ];
 
 export default function SubmitPage() {

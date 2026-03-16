@@ -2,7 +2,7 @@
 export interface Case {
   id: string;
   name: string;
-  type: "Missing Person" | "Unsolved Crime" | "Wanted Individual" | "Lost Pet";
+  type: "Missing Person" | "Unsolved Crime" | "Wanted Individual";
   reward: string;
   rewardNum: number;
   goal: number;
@@ -67,23 +67,6 @@ export const CASES: Case[] = [
       "Unidentified male found in River Junction area, 2021. Believed to be age 30\u201345. FBI and local law enforcement are seeking identification.",
     color: "#7B68A7",
     initials: "JD",
-  },
-  {
-    id: "biscuit",
-    name: "Biscuit \u2014 Lost Dog",
-    type: "Lost Pet",
-    reward: "$2,200",
-    rewardNum: 2200,
-    goal: 10000,
-    donors: 47,
-    days: 12,
-    loc: "Austin, TX",
-    pct: 22,
-    emoji: "\u{1F43E}",
-    summary:
-      "Biscuit, a 3-year-old golden retriever, went missing from Barton Hills neighborhood. Last seen wearing a blue collar.",
-    color: "#D4A24E",
-    initials: "B",
   },
   {
     id: "miller",

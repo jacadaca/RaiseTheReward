@@ -13,7 +13,6 @@ const FILTERS = [
   "Missing Person",
   "Unsolved Crime",
   "Wanted Individual",
-  "Lost Pet",
 ];
 
 function CasesContent() {

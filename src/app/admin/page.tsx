@@ -34,13 +34,6 @@ const QUEUE = [
     loc: "Chicago, IL",
     docs: true,
   },
-  {
-    name: "Fluffy \u2014 Lost Cat",
-    type: "Lost Pet",
-    sub: "Owner",
-    loc: "Portland, OR",
-    docs: false,
-  },
 ];
 
 export default function AdminPage() {
