@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
  * Set SITE_PASSWORD in your Vercel environment variables to enable.
  * Remove this file (or unset the env var) when you're ready to go public.
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const password = process.env.SITE_PASSWORD;
 
   // If no password is set, let everything through
@@ -15,9 +15,21 @@ export function proxy(request: NextRequest) {
   const authCookie = request.cookies.get("site-auth");
   if (authCookie?.value === password) return NextResponse.next();
 
-  // Handle the password form submission
-  if (request.method === "POST" && request.nextUrl.pathname === "/api/auth") {
-    return; // Let the API route handle it
+  // Handle password submission
+  if (request.method === "POST") {
+    const formData = await request.formData();
+    const submitted = formData.get("password") as string;
+
+    if (submitted === password) {
+      const response = NextResponse.redirect(new URL("/", request.url));
+      response.cookies.set("site-auth", password, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+      return response;
+    }
   }
 
   // Serve the password page
@@ -39,14 +51,13 @@ export function proxy(request: NextRequest) {
     input:focus { border-color: #555; }
     button { padding: 0.75rem 1.25rem; border: none; border-radius: 8px; background: #ededed; color: #0a0a0a; font-size: 1rem; font-weight: 600; cursor: pointer; }
     button:hover { background: #ccc; }
-    .error { color: #e55; margin-top: 0.75rem; font-size: 0.85rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>RaiseTheReward</h1>
     <p>This site is under development. Enter the password to continue.</p>
-    <form method="POST" action="/api/auth">
+    <form method="POST">
       <input type="password" name="password" placeholder="Password" autofocus required />
       <button type="submit">Enter</button>
     </form>
@@ -61,5 +72,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
