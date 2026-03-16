@@ -42,7 +42,7 @@ export default function Nav() {
           href="/submit"
           className="text-[14px] px-4 py-2 rounded-full bg-[var(--color-brand)] text-white font-semibold hover:opacity-90"
         >
-          Start a reward
+          Start a Reward
         </Link>
       </div>
     </nav>

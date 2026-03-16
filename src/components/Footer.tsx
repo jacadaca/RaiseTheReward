@@ -10,7 +10,7 @@ export default function Footer() {
             Browse cases
           </Link>
           <Link href="/submit" className="text-gray-500 hover:text-black">
-            Start a reward
+            Start a Reward
           </Link>
           <Link href="/how-it-works" className="text-gray-500 hover:text-black">
             How it works

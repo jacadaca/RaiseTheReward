@@ -39,7 +39,7 @@ export default function SignInPage() {
               href="/submit"
               className="px-5 py-2 rounded-full text-[14px] font-semibold bg-white text-black border border-gray-300"
             >
-              Start a reward
+              Start a Reward
             </Link>
           </div>
         </div>

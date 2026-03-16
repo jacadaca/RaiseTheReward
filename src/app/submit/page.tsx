@@ -88,7 +88,7 @@ export default function SubmitPage() {
 
       <div className="max-w-[560px] mx-auto px-8 py-8">
         <h1 className="font-serif text-[28px] tracking-tight mb-1.5">
-          Start a reward
+          Start a Reward
         </h1>
         <p className="text-[14px] text-gray-400 mb-6">
           All cases are reviewed by the RTR board before going live. Only

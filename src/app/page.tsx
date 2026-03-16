@@ -31,7 +31,7 @@ export default function Home() {
           href="/submit"
           className="inline-flex px-8 py-3.5 rounded-full text-[16px] font-semibold bg-[var(--color-brand)] text-white mb-4"
         >
-          Start a reward
+          Start a Reward
         </Link>
 
         <div className="text-[13px] text-gray-400 mb-12">
@@ -288,7 +288,7 @@ export default function Home() {
           Does someone need to come home?
         </h2>
         <p className="text-[16px] text-white/70 mb-8 max-w-[440px] mx-auto">
-          Start a reward fund in minutes. Your money is held until the case
+          Start a Reward fund in minutes. Your money is held until the case
           closes &mdash; then it goes to the person who brought answers.
         </p>
         <div className="flex gap-3 justify-center">
@@ -296,7 +296,7 @@ export default function Home() {
             href="/submit"
             className="px-7 py-3 rounded-full text-[16px] font-semibold bg-white text-black"
           >
-            Start a reward fund
+            Start a Reward fund
           </Link>
           <Link
             href="/cases"
