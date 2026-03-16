@@ -207,7 +207,7 @@ export default function Home() {
                 key={s}
                 className="flex gap-2 mb-2 text-[13px] text-gray-400"
               >
-                <span className="text-gray-300">&times;</span>
+                <span className="text-gray-300">{"\u00D7"}</span>
                 <span>{s}</span>
               </div>
             ))}
@@ -228,7 +228,7 @@ export default function Home() {
                 key={s}
                 className="flex gap-2 mb-2 text-[13px] text-gray-400"
               >
-                <span className="text-[var(--color-brand)]">&check;</span>
+                <span className="text-[var(--color-brand)]">{"\u2713"}</span>
                 <span>{s}</span>
               </div>
             ))}

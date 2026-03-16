@@ -73,7 +73,7 @@ export default function HowItWorksPage() {
             "Board oversight on every disbursement",
           ].map((p) => (
             <div key={p} className="flex gap-2 mb-2 text-[14px]">
-              <span className="text-[var(--color-brand)]">&check;</span>
+              <span className="text-[var(--color-brand)]">{"\u2713"}</span>
               <span>{p}</span>
             </div>
           ))}

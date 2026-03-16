@@ -149,7 +149,7 @@ export default function AdminPage() {
                   key={d}
                   className="flex gap-1.5 text-[13px] mb-1"
                 >
-                  <span className="text-black">&check;</span>
+                  <span className="text-black">{"\u2713"}</span>
                   <span>{d}</span>
                 </div>
               ))}
