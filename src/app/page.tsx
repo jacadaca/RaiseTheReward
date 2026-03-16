@@ -19,10 +19,10 @@ export default function Home() {
           You want to help.<br />
           <span className="text-[var(--color-brand)]">Now you can.</span>
         </h1>
-        <p className="text-[17px] text-gray-500 max-w-[500px] mx-auto mb-8 leading-relaxed">
-          Crowdfund a reward for information leading to the resolution of
-          missing persons, unsolved crimes, and more. Every dollar irrevocable.
-          Paid only on results.
+        <p className="text-[17px] text-gray-500 max-w-[520px] mx-auto mb-8 leading-relaxed">
+          Crowdfund a reward for information that leads to the resolution of
+          a missing persons or unsolved crime case. Paid out only when the
+          case is closed.
         </p>
 
         <Link
@@ -112,7 +112,7 @@ export default function Home() {
             {
               n: 2,
               t: "Tips go to law enforcement",
-              b: "Tipsters submit directly to FBI, local police, or Crime Stoppers. We play no role in tip intake or evaluation.",
+              b: "We never collect or handle tips. Tipsters contact the FBI, local police, or Crime Stoppers directly. We have zero involvement.",
             },
             {
               n: 3,
@@ -130,6 +130,50 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── HAVE A TIP? ── */}
+      <section className="bg-amber-50/60 border-t border-b border-amber-100/80 py-12 px-8">
+        <div className="max-w-[720px] mx-auto text-center">
+          <div className="text-[28px] mb-2">{"\u{1F6A8}"}</div>
+          <h2 className="font-serif text-[clamp(22px,3vw,32px)] tracking-tight mb-3">
+            Have a tip about a case?
+          </h2>
+          <p className="text-[15px] text-gray-600 leading-relaxed mb-6 max-w-[520px] mx-auto">
+            We don&rsquo;t collect tips &mdash; ever. Tips go directly to law
+            enforcement, not through our platform. If you have information about
+            a missing person or unsolved crime, contact one of these agencies:
+          </p>
+          <div className="flex justify-center gap-4 flex-wrap mb-5">
+            <a
+              href="https://tips.fbi.gov"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-[14px] font-semibold bg-black text-white hover:bg-gray-800 transition-colors"
+            >
+              FBI Tips &rarr;
+            </a>
+            <a
+              href="https://www.crimestoppersusa.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-[14px] font-semibold bg-black text-white hover:bg-gray-800 transition-colors"
+            >
+              Crime Stoppers &rarr;
+            </a>
+            <a
+              href="https://www.missingkids.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-[14px] font-semibold bg-black text-white hover:bg-gray-800 transition-colors"
+            >
+              NCMEC &rarr;
+            </a>
+          </div>
+          <p className="text-[13px] text-gray-400">
+            You can also call your local police department&rsquo;s non-emergency line or dial 911 in an emergency.
+          </p>
         </div>
       </section>
 
@@ -241,8 +285,8 @@ export default function Home() {
           Does someone need to come home?
         </h2>
         <p className="text-[16px] text-white/70 mb-8 max-w-[440px] mx-auto">
-          Start a reward fund in minutes. Every dollar irrevocably committed to
-          the person who brings answers.
+          Start a reward fund in minutes. Your money is held until the case
+          closes &mdash; then it goes to the person who brought answers.
         </p>
         <div className="flex gap-3 justify-center">
           <Link
