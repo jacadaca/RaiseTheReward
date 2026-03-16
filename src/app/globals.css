@@ -3,10 +3,10 @@
 @theme inline {
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-dm-serif);
-  --color-brand: #e8610a;
-  --color-brand-light: #ffb380;
-  --color-brand-bg: rgba(232, 97, 10, 0.1);
-  --color-brand-border: rgba(232, 97, 10, 0.25);
+  --color-brand: #cc0000;
+  --color-brand-light: #ff3333;
+  --color-brand-bg: rgba(204, 0, 0, 0.08);
+  --color-brand-border: rgba(204, 0, 0, 0.2);
 }
 
 body {

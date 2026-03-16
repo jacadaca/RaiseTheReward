@@ -47,7 +47,7 @@ export default function DonatePage({
         <div className="bg-white border border-gray-200 rounded-[10px] p-4 mb-3.5">
           <div className="flex justify-between items-center mb-1">
             <div className="font-medium">{c.name}</div>
-            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#eaf3de] text-[#3b6d11]">
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-black">
               Active
             </span>
           </div>
@@ -86,7 +86,7 @@ export default function DonatePage({
         </div>
 
         {/* Fee breakdown */}
-        <div className="bg-[#f8f7f5] rounded-lg p-3.5 text-[13px] mb-3.5">
+        <div className="bg-gray-50 rounded-lg p-3.5 text-[13px] mb-3.5">
           <div className="flex justify-between mb-1.5 text-gray-400">
             <span>Your donation</span>
             <span>${amount.toFixed(2)}</span>
@@ -101,7 +101,7 @@ export default function DonatePage({
           </div>
           <div className="flex justify-between font-semibold text-gray-900 border-t border-gray-200 pt-2 mt-0.5">
             <span>Goes to reward pool</span>
-            <span className="text-[#3b6d11]">${toPool}</span>
+            <span className="text-black">${toPool}</span>
           </div>
         </div>
 
@@ -112,7 +112,7 @@ export default function DonatePage({
         </label>
 
         {/* Warning */}
-        <div className="bg-[#faeeda] border border-[#fac775] rounded-lg px-3.5 py-2.5 text-[13px] text-[#633806] mb-4">
+        <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-4">
           All donations are <strong>irrevocable</strong>. Once made, you cannot
           request a refund.
         </div>
@@ -126,7 +126,7 @@ export default function DonatePage({
           <div className="text-[11px] text-gray-300 text-center mb-2.5">
             Step 2 preview
           </div>
-          <div className="bg-[#f8f7f5] border border-gray-200 rounded-[10px] p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-[10px] p-4">
             <div className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-2.5">
               Payment details
             </div>

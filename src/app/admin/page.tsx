@@ -67,7 +67,7 @@ export default function AdminPage() {
         <div className="flex items-center gap-2">
           <span className="text-[12px] text-gray-600">Internal only</span>
           <span
-            className="w-1.5 h-1.5 rounded-full bg-[#3b6d11] inline-block ml-2"
+            className="w-1.5 h-1.5 rounded-full bg-black inline-block ml-2"
             title="Board member logged in"
           />
         </div>
@@ -135,10 +135,10 @@ export default function AdminPage() {
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-semibold text-[#3b6d11] text-[16px]">
+                <div className="font-semibold text-black text-[16px]">
                   {cl.pool}
                 </div>
-                <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#faeeda] text-[#854f0b]">
+                <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
                   {cl.status}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export default function AdminPage() {
                   key={d}
                   className="flex gap-1.5 text-[13px] mb-1"
                 >
-                  <span className="text-[#3b6d11]">&check;</span>
+                  <span className="text-black">&check;</span>
                   <span>{d}</span>
                 </div>
               ))}
@@ -161,7 +161,7 @@ export default function AdminPage() {
               <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-gray-200 text-gray-700 hover:bg-gray-50">
                 Request more info
               </button>
-              <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-red-200 text-[#b84a00] hover:bg-red-50">
+              <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-red-200 text-[var(--color-brand)] hover:bg-red-50">
                 Deny claim
               </button>
             </div>
@@ -188,8 +188,8 @@ export default function AdminPage() {
                 <span
                   className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
                     c.docs
-                      ? "bg-[#eaf3de] text-[#3b6d11]"
-                      : "bg-[#fff0e6] text-[#b84a00]"
+                      ? "bg-gray-100 text-black"
+                      : "bg-red-50 text-[var(--color-brand)]"
                   }`}
                 >
                   {c.docs ? "Docs provided" : "No docs"}
@@ -202,7 +202,7 @@ export default function AdminPage() {
                 <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-gray-200 text-gray-700 hover:bg-gray-50">
                   Review
                 </button>
-                <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-red-200 text-[#b84a00] hover:bg-red-50">
+                <button className="px-3.5 py-1.5 rounded-full text-[12px] border border-red-200 text-[var(--color-brand)] hover:bg-red-50">
                   Reject
                 </button>
               </div>

@@ -32,7 +32,7 @@ export default async function CaseHubPage({
               <span className="inline-flex px-2.5 py-0.5 rounded text-[11px] bg-gray-100 text-gray-500">
                 {c.type}
               </span>
-              <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#eaf3de] text-[#3b6d11]">
+              <span className="inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 text-black">
                 Active
               </span>
             </div>
@@ -136,7 +136,7 @@ export default async function CaseHubPage({
             </div>
 
             {/* Warning */}
-            <div className="bg-[#faeeda] border border-[#fac775] rounded-lg px-3.5 py-2.5 text-[13px] text-[#633806] mb-3">
+            <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-3">
               <strong>Important:</strong> RTR is not a tip intake platform.
               Submit all tips directly to law enforcement via the
               &ldquo;Official tip directory&rdquo; tab.
@@ -156,7 +156,7 @@ export default async function CaseHubPage({
                 "Reward passed $10,000",
               ].map((e, i) => (
                 <div key={i} className="flex gap-2 mb-2 items-center">
-                  <div className="w-[18px] h-[18px] rounded-full bg-[#3b6d11] text-white text-[10px] flex items-center justify-center shrink-0">
+                  <div className="w-[18px] h-[18px] rounded-full bg-black text-white text-[10px] flex items-center justify-center shrink-0">
                     {i + 1}
                   </div>
                   <span className="text-[13px]">{e}</span>

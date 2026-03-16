@@ -10,15 +10,13 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className="bg-white pt-14 pb-0 px-8 text-center overflow-hidden">
-        <div className="inline-flex items-center gap-1.5 bg-[var(--color-brand-bg)] border border-[var(--color-brand-border)] text-[var(--color-brand)] text-[12px] font-medium px-3 py-1 rounded-full mb-5">
+        <div className="inline-flex items-center gap-1.5 bg-gray-100 border border-gray-200 text-gray-500 text-[12px] font-medium px-3 py-1 rounded-full mb-5">
           47 active reward pools &middot; $251,750 held for justice
         </div>
-        <h1 className="font-serif text-[clamp(28px,4vw,52px)] text-gray-900 leading-[1.1] tracking-tight max-w-[680px] mx-auto mb-4">
+        <h1 className="font-serif text-[clamp(28px,4vw,52px)] text-black leading-[1.1] tracking-tight max-w-[680px] mx-auto mb-4">
           The public wants to help.
           <br />
-          <span className="text-[var(--color-brand-light)]">
-            Give them a way.
-          </span>
+          <span className="text-[var(--color-brand)]">Give them a way.</span>
         </h1>
         <p className="text-[15px] text-gray-500 max-w-[460px] mx-auto mb-7">
           Crowdfund a reward for information leading to the resolution of
@@ -27,12 +25,12 @@ export default function Home() {
         </p>
 
         {/* Search */}
-        <div className="flex bg-white rounded-full p-1.5 pl-5 max-w-[520px] mx-auto mb-3.5 shadow-[0_4px_32px_rgba(0,0,0,0.5)]">
+        <div className="flex bg-white rounded-full p-1.5 pl-5 max-w-[520px] mx-auto mb-3.5 border border-gray-200 shadow-sm">
           <input
-            className="flex-1 border-none outline-none text-[14px] bg-transparent text-gray-900 placeholder:text-gray-400"
+            className="flex-1 border-none outline-none text-[14px] bg-transparent text-black placeholder:text-gray-400"
             placeholder="Search a case, person, or location&hellip;"
           />
-          <button className="bg-[var(--color-brand)] text-white border-none rounded-full px-5 py-2 text-[13px] font-semibold whitespace-nowrap">
+          <button className="bg-black text-white border-none rounded-full px-5 py-2 text-[13px] font-semibold whitespace-nowrap">
             Find a case
           </button>
         </div>
@@ -42,7 +40,7 @@ export default function Home() {
           <button className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white border-none">
             Start a reward fund
           </button>
-          <button className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-gray-500 border-[1.5px] border-gray-200">
+          <button className="inline-flex items-center gap-1 px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border border-gray-300">
             See open cases
           </button>
         </div>
@@ -55,19 +53,19 @@ export default function Home() {
           {CASES.slice(0, 4).map((c) => (
             <div
               key={c.id}
-              className="flex-1 min-w-0 bg-[#f8f7f5] border border-gray-200 rounded-t-xl p-4 text-left"
+              className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded-t-xl p-4 text-left"
             >
               <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide flex items-center gap-1.5 mb-2">
                 <span className="w-[5px] h-[5px] rounded-full bg-[var(--color-brand)] inline-block" />
                 {c.type}
               </div>
-              <div className="text-[14px] font-semibold text-gray-900 mb-0.5">
+              <div className="text-[14px] font-semibold text-black mb-0.5">
                 {c.name}
               </div>
               <div className="text-[11px] text-gray-400 mb-2.5">
                 {c.loc} &middot; {c.days}d open
               </div>
-              <div className="text-[22px] font-semibold text-gray-900 tracking-tight">
+              <div className="text-[22px] font-semibold text-black tracking-tight">
                 {c.reward}
               </div>
               <div className="text-[11px] text-gray-400 mb-2">
@@ -79,7 +77,7 @@ export default function Home() {
                   style={{ width: `${c.pct}%` }}
                 />
               </div>
-              <button className="w-full text-center py-1.5 rounded-full bg-[var(--color-brand-bg)] text-[var(--color-brand)] text-[12px] font-medium border border-[var(--color-brand-border)]">
+              <button className="w-full text-center py-1.5 rounded-full bg-black text-white text-[12px] font-medium">
                 Donate to this reward &rarr;
               </button>
             </div>
@@ -88,7 +86,7 @@ export default function Home() {
       </section>
 
       {/* ── TRUST BAR ── */}
-      <section className="bg-[#f8f7f5] border-t border-b border-gray-100 py-4.5 px-8 flex justify-center gap-10 flex-wrap">
+      <section className="bg-gray-50 border-t border-b border-gray-200 py-4.5 px-8 flex justify-center gap-10 flex-wrap">
         {[
           { v: "$251,750", l: "Total held in reward pools" },
           { v: "2,907", l: "Donors across all cases" },
@@ -97,7 +95,7 @@ export default function Home() {
           { v: "100%", l: "Paid on verified resolution" },
         ].map((s) => (
           <div key={s.l} className="text-center">
-            <div className="font-serif text-[22px] text-gray-900">{s.v}</div>
+            <div className="font-serif text-[22px] text-black">{s.v}</div>
             <div className="text-[11px] text-gray-400 mt-0.5">{s.l}</div>
           </div>
         ))}
@@ -123,20 +121,20 @@ export default function Home() {
       </section>
 
       {/* ── QUOTE ── */}
-      <section className="bg-[#0d0d0d] py-12 px-8 text-center">
+      <section className="bg-black py-12 px-8 text-center">
         <blockquote className="font-serif text-[clamp(18px,2.5vw,28px)] text-white max-w-[680px] mx-auto mb-3.5 leading-[1.35] tracking-tight">
           &ldquo;When a family goes on CNN and says &lsquo;please help find our
           daughter&rsquo; &mdash; where does that public energy go? Until now,
           nowhere.&rdquo;
         </blockquote>
-        <cite className="text-[13px] text-gray-600 not-italic">
+        <cite className="text-[13px] text-gray-500 not-italic">
           &mdash; RaiseTheReward.com &middot; The first purpose-built
           crowdsourced reward platform in the US
         </cite>
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-12 px-8 text-center bg-[#f8f7f5]">
+      <section className="py-12 px-8 text-center bg-gray-50">
         <div className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-2.5">
           How it works
         </div>
@@ -166,7 +164,7 @@ export default function Home() {
             },
           ].map((s) => (
             <div key={s.n} className="text-center">
-              <div className="w-10 h-10 rounded-full bg-gray-900 text-white text-[16px] font-semibold flex items-center justify-center mx-auto mb-3">
+              <div className="w-10 h-10 rounded-full bg-black text-white text-[16px] font-semibold flex items-center justify-center mx-auto mb-3">
                 {s.n}
               </div>
               <div className="text-[15px] font-semibold mb-1.5">{s.t}</div>
@@ -193,8 +191,8 @@ export default function Home() {
         </p>
         <div className="grid grid-cols-2 gap-5 max-w-[760px] mx-auto">
           {/* GoFundMe */}
-          <div className="bg-[#f8f7f5] border border-gray-200 rounded-xl p-5 text-left">
-            <div className="text-[16px] font-semibold text-gray-500 mb-3.5">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 text-left">
+            <div className="text-[16px] font-semibold text-gray-400 mb-3.5">
               GoFundMe
             </div>
             {[
@@ -208,13 +206,13 @@ export default function Home() {
                 key={s}
                 className="flex gap-2 mb-2 text-[13px] text-gray-400"
               >
-                <span className="text-orange-400">&times;</span>
+                <span className="text-gray-300">&times;</span>
                 <span>{s}</span>
               </div>
             ))}
           </div>
           {/* RTR */}
-          <div className="bg-[#0d0d0d] border border-gray-800 rounded-xl p-5 text-left">
+          <div className="bg-black border border-gray-800 rounded-xl p-5 text-left">
             <div className="text-[16px] font-semibold text-white mb-3.5">
               RaiseTheReward
             </div>
@@ -229,9 +227,7 @@ export default function Home() {
                 key={s}
                 className="flex gap-2 mb-2 text-[13px] text-gray-400"
               >
-                <span className="text-[var(--color-brand-light)]">
-                  &check;
-                </span>
+                <span className="text-[var(--color-brand)]">&check;</span>
                 <span>{s}</span>
               </div>
             ))}
@@ -249,7 +245,7 @@ export default function Home() {
           the person who brings answers.
         </p>
         <div className="flex gap-2.5 justify-center">
-          <button className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-[var(--color-brand)] border-none">
+          <button className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white text-black border-none">
             Start a reward fund
           </button>
           <button className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-white/15 text-white border border-white/30">

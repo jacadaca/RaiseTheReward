@@ -58,7 +58,7 @@ export default function CasesPage() {
         {filtered.map((c) => (
           <CaseCard key={c.id} c={c} />
         ))}
-        <div className="flex items-center justify-center min-h-[240px] bg-[#f8f7f5] border border-dashed border-gray-300 rounded-xl">
+        <div className="flex items-center justify-center min-h-[240px] bg-gray-50 border border-dashed border-gray-300 rounded-xl">
           <div className="text-center text-gray-400">
             <div className="text-[28px] mb-2">&rarr;</div>
             <div className="text-[14px] font-semibold">Load more cases</div>

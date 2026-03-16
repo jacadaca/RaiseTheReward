@@ -16,7 +16,7 @@ export default function ClaimPage() {
           the qualifying tipster.
         </p>
 
-        <div className="bg-[#faeeda] border border-[#fac775] rounded-lg px-3.5 py-2.5 text-[13px] text-[#633806] mb-6">
+        <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-6">
           <strong>Important:</strong> RTR does not evaluate tips or determine
           who solved a case. Only proceed if law enforcement has already
           confirmed your role.
