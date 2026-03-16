@@ -20,9 +20,11 @@ export default function Home() {
           <span className="text-[var(--color-brand)]">Now you can.</span>
         </h1>
         <p className="text-[17px] text-gray-500 max-w-[520px] mx-auto mb-8 leading-relaxed">
-          Raise The Reward crowdfunds rewards for information that leads to
-          the resolution of missing persons, unsolved crimes and wanted
-          individuals. The reward is paid out only when the case is closed.
+          <strong>Raise The Reward</strong> uses crowdfunding to pool together a
+          financial reward for information that leads to the resolution of any
+          missing persons, unsolved crime and wanted individual case. People
+          donate funds towards the reward for a specific case, and that reward
+          money is only paid out when the case is closed.
         </p>
 
         <Link
