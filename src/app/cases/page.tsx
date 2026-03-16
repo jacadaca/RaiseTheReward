@@ -49,7 +49,7 @@ function CasesContent() {
             href="/submit"
             className="px-4 py-2 rounded-full text-[13px] font-medium bg-[var(--color-brand)] text-white"
           >
-            + Submit a case
+            + Start a reward
           </Link>
         </div>
 

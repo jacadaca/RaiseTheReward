@@ -27,7 +27,7 @@ export default function Nav() {
           href="/submit"
           className="text-[14px] text-gray-600 hover:text-black"
         >
-          Submit a case
+          Start a reward
         </Link>
       </div>
 

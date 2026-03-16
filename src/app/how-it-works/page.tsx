@@ -93,7 +93,7 @@ export default function HowItWorksPage() {
             href="/submit"
             className="px-6 py-2.5 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white"
           >
-            Submit a case
+            Start a reward
           </Link>
           <Link
             href="/cases"
