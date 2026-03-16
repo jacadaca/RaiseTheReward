@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
  * Set SITE_PASSWORD in your Vercel environment variables to enable.
  * Remove this file (or unset the env var) when you're ready to go public.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const password = process.env.SITE_PASSWORD;
 
   // If no password is set, let everything through
