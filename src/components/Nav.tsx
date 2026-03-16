@@ -27,7 +27,7 @@ export default function Nav() {
 
       {/* Center: logo */}
       <Link href="/" className="absolute left-1/2 -translate-x-1/2 font-serif text-[20px] text-black">
-        raise<em className="text-[var(--color-brand)] not-italic font-serif">the</em>reward
+        <span className="text-[var(--color-brand)]">Raise</span><span className="text-gray-400">the</span><span className="text-[var(--color-brand)]">Reward</span>
       </Link>
 
       {/* Right: auth + CTA */}

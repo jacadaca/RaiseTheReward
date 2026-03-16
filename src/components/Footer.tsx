@@ -27,7 +27,7 @@ export default function Footer() {
         <div className="flex items-center justify-between border-t border-gray-100 pt-5">
           <div className="flex items-center gap-4">
             <Link href="/" className="font-serif text-[15px] text-black">
-              raise<em className="text-[var(--color-brand)] not-italic">the</em>reward
+              <span className="text-[var(--color-brand)]">Raise</span><span className="text-gray-400">the</span><span className="text-[var(--color-brand)]">Reward</span>
             </Link>
             <span className="text-[12px] text-gray-400">
               &copy; 2025 RaiseTheReward, Inc. &middot; Delaware C-Corp
