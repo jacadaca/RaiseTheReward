@@ -172,6 +172,7 @@ export default function Home() {
             </a>
           </div>
           <p className="text-[13px] text-gray-400">
+            Each case page also lists the specific law enforcement contacts for that investigation.
             You can also call your local police department&rsquo;s non-emergency line or dial 911 in an emergency.
           </p>
         </div>
