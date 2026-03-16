@@ -16,8 +16,8 @@ export default function Home() {
           The #1 crowdsourced reward platform
         </div>
         <h1 className="font-serif text-[clamp(32px,5vw,64px)] text-black leading-[1.05] tracking-tight max-w-[700px] mx-auto mb-5">
-          The public wants to help.{" "}
-          <span className="text-[var(--color-brand)]">Give them a way.</span>
+          You want to help.{" "}
+          <span className="text-[var(--color-brand)]">Now you can.</span>
         </h1>
         <p className="text-[17px] text-gray-500 max-w-[500px] mx-auto mb-8 leading-relaxed">
           Crowdfund a reward for information leading to the resolution of
