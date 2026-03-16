@@ -2,6 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
+import SearchBar from "@/components/SearchBar";
 import { CASES } from "@/lib/cases";
 
 export default function Home() {
@@ -26,15 +27,7 @@ export default function Home() {
         </p>
 
         {/* Search */}
-        <div className="flex bg-white rounded-full p-1.5 pl-5 max-w-[520px] mx-auto mb-3.5 border border-gray-200 shadow-sm">
-          <input
-            className="flex-1 border-none outline-none text-[14px] bg-transparent text-black placeholder:text-gray-400"
-            placeholder="Search a case, person, or location&hellip;"
-          />
-          <button className="bg-black text-white border-none rounded-full px-5 py-2 text-[13px] font-semibold whitespace-nowrap">
-            Find a case
-          </button>
-        </div>
+        <SearchBar />
 
         {/* CTA buttons */}
         <div className="flex gap-2 justify-center mb-9">

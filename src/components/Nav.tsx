@@ -26,10 +26,10 @@ export default function Nav() {
           Submit a case
         </Link>
         <Link
-          href="/claim"
+          href="/sign-in"
           className="ml-1.5 text-[13px] px-3 py-1.5 rounded-full border border-gray-300 text-black hover:bg-gray-50"
         >
-          Claim reward
+          Sign in
         </Link>
         <Link
           href="/submit"
