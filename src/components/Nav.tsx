@@ -23,12 +23,6 @@ export default function Nav() {
         >
           How it works
         </Link>
-        <Link
-          href="/submit"
-          className="text-[14px] text-gray-600 hover:text-black"
-        >
-          Start a reward
-        </Link>
       </div>
 
       {/* Center: logo */}
