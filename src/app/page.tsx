@@ -157,7 +157,7 @@ export default function Home() {
             <SearchBar />
           </div>
 
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-4 gap-5">
             {CASES.map((c) => (
               <CaseCard key={c.id} c={c} />
             ))}
