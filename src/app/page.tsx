@@ -13,7 +13,7 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="bg-white pt-16 pb-0 px-8 text-center overflow-hidden">
         <div className="text-[13px] text-[var(--color-brand)] font-semibold tracking-wide uppercase mb-4">
-          The #1 crowdsourced reward platform
+          The only crowdsourced reward platform for unsolved crimes
         </div>
         <h1 className="font-serif text-[clamp(32px,5vw,64px)] text-black leading-[1.05] tracking-tight max-w-[700px] mx-auto mb-5">
           You want to help.<br />
