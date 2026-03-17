@@ -48,7 +48,7 @@ export default function Home() {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-16 px-8 max-w-[900px] mx-auto">
+      <section className="pt-14 pb-10 px-8 max-w-[900px] mx-auto">
         <h2 className="font-serif text-[clamp(26px,3.5vw,40px)] tracking-tight text-center mb-3">
           Easy, powerful, and trusted
         </h2>
@@ -88,9 +88,8 @@ export default function Home() {
       </section>
 
       {/* ── HAVE A TIP? ── */}
-      <section className="bg-amber-50/60 border-t border-b border-amber-100/80 py-12 px-8">
+      <section className="bg-amber-50/60 border-t border-b border-amber-100/80 py-10 px-8">
         <div className="max-w-[720px] mx-auto text-center">
-          <div className="text-[28px] mb-2">{"\u{1F6A8}"}</div>
           <h2 className="font-serif text-[clamp(22px,3vw,32px)] tracking-tight mb-3">
             Have a tip about a case?
           </h2>
