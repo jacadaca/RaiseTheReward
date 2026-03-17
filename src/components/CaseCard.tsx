@@ -1,7 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { Case } from "@/lib/cases";
 
 export default function CaseCard({ c }: { c: Case }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <Link
       href={`/case/${c.id}`}
@@ -12,12 +17,13 @@ export default function CaseCard({ c }: { c: Case }) {
         className="h-[180px] flex items-center justify-center relative overflow-hidden"
         style={{ background: c.color }}
       >
-        {c.imageUrl ? (
+        {c.imageUrl && !imgError ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={c.imageUrl}
             alt={c.name}
             className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
           />
         ) : (
           <span className="text-white/30 text-[64px] font-serif font-bold">

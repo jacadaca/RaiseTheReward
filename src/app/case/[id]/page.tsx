@@ -14,6 +14,7 @@ export default function CaseHubPage({
   const { id } = use(params);
   const c = CASES.find((cs) => cs.id === id) ?? CASES[0];
   const [showFullSummary, setShowFullSummary] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <>
@@ -41,12 +42,13 @@ export default function CaseHubPage({
               className="w-full h-[340px] rounded-2xl flex items-center justify-center mb-4 relative overflow-hidden"
               style={{ background: c.color }}
             >
-              {c.imageUrl ? (
+              {c.imageUrl && !imgError ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={c.imageUrl}
                   alt={c.name}
                   className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
                 />
               ) : (
                 <span className="text-white/20 text-[120px] font-serif font-bold">
