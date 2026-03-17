@@ -34,43 +34,6 @@ export default function Home() {
           Start a Reward
         </Link>
 
-        <div className="mb-12" />
-
-        {/* Hero case circles — like GoFundMe's photo circles */}
-        <div className="flex justify-center gap-5 mb-0 pb-0">
-          {CASES.slice(0, 5).map((c) => (
-            <Link
-              key={c.id}
-              href={`/case/${c.id}`}
-              className="group flex flex-col items-center"
-            >
-              <div className="relative w-[100px] h-[100px] mb-2">
-                {/* Progress ring */}
-                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="46" fill="none" stroke="#e5e7eb" strokeWidth="4" />
-                  <circle
-                    cx="50" cy="50" r="46"
-                    fill="none"
-                    stroke="var(--color-brand)"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${c.pct * 2.89} 289`}
-                  />
-                </svg>
-                {/* Avatar */}
-                <div
-                  className="absolute inset-[6px] rounded-full flex items-center justify-center text-white font-serif text-[24px] font-bold group-hover:scale-105 transition-transform"
-                  style={{ background: c.color }}
-                >
-                  {c.initials}
-                </div>
-              </div>
-              <div className="text-[12px] font-medium text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full">
-                {c.type}
-              </div>
-            </Link>
-          ))}
-        </div>
       </section>
 
       {/* ── TRUST BAR ── */}
