@@ -76,9 +76,14 @@ export default function AdminPage() {
       const res = await fetch("/api/sync-fbi", { method: "POST" });
       const data = await res.json();
       if (data.success) {
-        setSyncResult(
-          `Synced ${data.imported} cases from FBI (${data.totalPages} pages)`
-        );
+        let msg = `Synced ${data.imported} cases from FBI (${data.totalPages} pages)`;
+        if (data.errors && data.errors.length > 0) {
+          msg += ` | Errors: ${data.errors.slice(0, 3).join("; ")}`;
+        }
+        if (data.debug) {
+          msg += ` | Debug: ${data.debug}`;
+        }
+        setSyncResult(msg);
         await fetchCases();
       } else {
         setSyncResult(`Sync failed: ${data.error}`);

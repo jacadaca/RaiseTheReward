@@ -68,9 +68,10 @@ export async function POST() {
     let totalImported = 0;
     let totalPages = 1;
     const errors: string[] = [];
+    let debug = "";
 
     // Paginate through the FBI API
-    while (page <= totalPages) {
+    while (page <= totalPages && page <= 50) { // Cap at 50 pages for safety
       const url = `${FBI_API}?page=${page}&pageSize=${PAGE_SIZE}`;
       const res = await fetch(url, {
         headers: { Accept: "application/json" },
@@ -82,6 +83,14 @@ export async function POST() {
       }
 
       const data = await res.json();
+
+      // Debug: capture info about what the API returned on page 1
+      if (page === 1) {
+        const keys = Object.keys(data);
+        const itemCount = Array.isArray(data.items) ? data.items.length : 0;
+        const firstKeys = data.items?.[0] ? Object.keys(data.items[0]).slice(0, 8).join(",") : "none";
+        debug = `keys=[${keys}] total=${data.total} items=${itemCount} firstItemFields=[${firstKeys}]`;
+      }
 
       // Calculate total pages on first request
       if (page === 1 && data.total) {
@@ -160,6 +169,7 @@ export async function POST() {
       imported: totalImported,
       totalPages,
       errors: errors.length > 0 ? errors : undefined,
+      debug,
     });
   } catch (err) {
     return NextResponse.json(
