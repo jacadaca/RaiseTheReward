@@ -15,14 +15,6 @@ export default function CaseHubPage({
   const c = CASES.find((cs) => cs.id === id) ?? CASES[0];
   const [showFullSummary, setShowFullSummary] = useState(false);
 
-  const recentDonors = [
-    { name: "Anonymous", amt: "$500", time: "1 hour ago" },
-    { name: "Jennifer T.", amt: "$100", time: "3 hours ago" },
-    { name: "The Williams Family", amt: "$250", time: "6 hours ago" },
-    { name: "Anonymous", amt: "$25", time: "1 day ago" },
-    { name: "David K.", amt: "$50", time: "1 day ago" },
-  ];
-
   return (
     <>
       <Nav />
@@ -62,17 +54,22 @@ export default function CaseHubPage({
               </div>
             </div>
 
-            {/* Organizer + trust badge */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-[13px] font-bold text-gray-500">
-                R
-              </div>
-              <div>
-                <div className="text-[14px] font-medium">RTR Board</div>
-                <div className="text-[12px] text-gray-400">
-                  Verified &middot; {c.loc}
-                </div>
-              </div>
+            {/* Source attribution */}
+            <div className="flex items-center gap-2 mb-4 text-[13px] text-gray-400">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+              Sourced from{" "}
+              <a
+                href={c.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--color-brand)] hover:underline font-medium"
+              >
+                {c.source}
+              </a>
+              <span>&middot; Added {c.dateAdded}</span>
             </div>
 
             {/* Trust badge */}
@@ -112,7 +109,7 @@ export default function CaseHubPage({
               </button>
             </div>
 
-            {/* Organizer section */}
+            {/* Case details */}
             <div className="mb-8 pb-8 border-b border-gray-100">
               <h3 className="text-[18px] font-semibold mb-3">Case details</h3>
               <div className="grid grid-cols-2 gap-3">
@@ -120,7 +117,7 @@ export default function CaseHubPage({
                   { l: "Case type", v: c.type },
                   { l: "Status", v: "Active" },
                   { l: "Location", v: c.loc },
-                  { l: "Days open", v: String(c.days) },
+                  { l: "Source", v: c.source },
                   { l: "Donors", v: String(c.donors) },
                   { l: "Platform fee", v: "4%" },
                 ].map((item) => (
@@ -148,16 +145,23 @@ export default function CaseHubPage({
               ))}
             </div>
 
-            {/* Tip directory */}
+            {/* Tip directory — case-specific */}
             <div className="mb-8 pb-8 border-b border-gray-100">
               <h3 className="text-[18px] font-semibold mb-2">Where to submit tips</h3>
               <p className="text-[14px] text-gray-500 mb-3">
-                RTR does not accept tips. Contact the appropriate agency directly:
+                RTR does not accept or handle tips. Contact law enforcement directly:
               </p>
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-3">
+                <div className="text-[14px] font-medium text-black mb-1">
+                  Case-specific contact
+                </div>
+                <div className="text-[14px] text-[var(--color-brand)]">
+                  {c.leContact}
+                </div>
+              </div>
               {[
-                { agency: "Local Law Enforcement", phone: "(555) 555-0100" },
-                { agency: "FBI Tip Line", phone: "1-800-CALL-FBI" },
-                { agency: "Crime Stoppers", phone: "1-800-222-TIPS" },
+                { agency: "FBI Tip Line", contact: "tips.fbi.gov or 1-800-CALL-FBI" },
+                { agency: "Crime Stoppers", contact: "1-800-222-TIPS" },
               ].map((a) => (
                 <div
                   key={a.agency}
@@ -165,60 +169,39 @@ export default function CaseHubPage({
                 >
                   <span className="text-[14px] font-medium">{a.agency}</span>
                   <span className="text-[14px] font-medium text-[var(--color-brand)]">
-                    {a.phone}
+                    {a.contact}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* Words of support */}
+            {/* Words of support — empty state for new cases */}
             <div className="mb-8">
               <h3 className="text-[18px] font-semibold mb-1">
-                Words of support{" "}
-                <span className="text-[13px] font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full ml-1">
-                  3
-                </span>
+                Words of support
               </h3>
-              <p className="text-[13px] text-gray-400 mb-4">
-                Donate to share words of support.
-              </p>
-              {[
-                {
-                  name: "Sarah M.",
-                  amt: "$50",
-                  time: "2 hours ago",
-                  text: "Shared this on my neighborhood Facebook group. Hoping someone knows something.",
-                },
-                {
-                  name: "Anonymous",
-                  amt: "$25",
-                  time: "1 day ago",
-                  text: "Praying for a resolution. Every bit helps.",
-                },
-                {
-                  name: "Mike R.",
-                  amt: "$100",
-                  time: "3 days ago",
-                  text: "I live in the area. Will keep an eye out.",
-                },
-              ].map((comment, i) => (
-                <div key={i} className="flex gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-[12px] font-bold text-gray-400 shrink-0">
-                    {comment.name[0]}
-                  </div>
-                  <div>
-                    <div className="text-[13px]">
-                      <span className="font-medium">{comment.name}</span>
-                      <span className="text-gray-400 ml-1.5">
-                        {comment.amt} &middot; {comment.time}
-                      </span>
-                    </div>
-                    <p className="text-[14px] text-gray-600 mt-0.5">
-                      {comment.text}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {c.donors > 0 ? (
+                <p className="text-[13px] text-gray-400 mb-4">
+                  Donate to share words of support.
+                </p>
+              ) : (
+                <p className="text-[14px] text-gray-400 mt-2">
+                  No donations yet. Be the first to contribute to this reward pool.
+                </p>
+              )}
+            </div>
+
+            {/* Disclaimer */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 text-[13px] text-gray-500 leading-relaxed">
+              <strong className="text-gray-700">Disclaimer:</strong> This case was sourced from
+              public law enforcement databases ({c.source}). Raise The Reward is not affiliated
+              with the investigating agency. All case information is sourced from public records.
+              Tips should be submitted directly to law enforcement &mdash; RTR does not collect,
+              relay, or evaluate tips. If you are associated with this case and wish to have it
+              removed, please{" "}
+              <Link href={`/removal-request?case=${c.id}`} className="text-[var(--color-brand)] hover:underline">
+                submit a removal request
+              </Link>.
             </div>
 
             {/* Claim footer */}
@@ -236,14 +219,16 @@ export default function CaseHubPage({
           <div>
             <div className="sticky top-[76px]">
               <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                {/* Progress ring + amount */}
+                {/* Amount raised */}
                 <div className="mb-4">
                   <div className="text-[22px] font-bold text-black">
-                    {c.reward} raised
+                    {c.rewardNum === 0 ? "No donations yet" : `${c.reward} raised`}
                   </div>
-                  <div className="text-[13px] text-gray-400">
-                    {c.donors} donations
-                  </div>
+                  {c.donors > 0 && (
+                    <div className="text-[13px] text-gray-400">
+                      {c.donors} donations
+                    </div>
+                  )}
                 </div>
 
                 {/* Donate button */}
@@ -251,7 +236,7 @@ export default function CaseHubPage({
                   href={`/case/${c.id}/donate`}
                   className="flex items-center justify-center w-full py-3 rounded-full bg-[var(--color-brand)] text-white text-[15px] font-semibold mb-2"
                 >
-                  Donate now
+                  {c.donors === 0 ? "Be the first to donate" : "Donate now"}
                 </Link>
 
                 {/* Share button */}
@@ -259,35 +244,26 @@ export default function CaseHubPage({
                   Share
                 </button>
 
-                {/* Recent donations */}
-                <div className="flex items-center gap-2 text-[13px] text-[var(--color-brand)] font-medium mb-3">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                    <polyline points="17 6 23 6 23 12" />
-                  </svg>
-                  {c.donors} recent donations
+                {/* Source info */}
+                <div className="border-t border-gray-100 pt-4 mt-2">
+                  <div className="text-[12px] text-gray-400 mb-1">Sourced from</div>
+                  <a
+                    href={c.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[13px] font-medium text-[var(--color-brand)] hover:underline"
+                  >
+                    {c.source} &rarr;
+                  </a>
                 </div>
 
-                {recentDonors.slice(0, 4).map((d, i) => (
-                  <div key={i} className="flex items-center gap-2.5 mb-2.5">
-                    <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-[11px] font-bold text-gray-400 shrink-0">
-                      {d.name[0]}
-                    </div>
-                    <div className="text-[13px]">
-                      <span className="font-medium">{d.name}</span>
-                      <div className="text-gray-400">
-                        {d.amt} &middot; {d.time}
-                      </div>
-                    </div>
+                {/* LE Contact */}
+                <div className="border-t border-gray-100 pt-4 mt-4">
+                  <div className="text-[12px] text-gray-400 mb-1">Have a tip?</div>
+                  <div className="text-[13px] text-gray-600 leading-relaxed">
+                    {c.leContact}
                   </div>
-                ))}
-
-                <Link
-                  href="#"
-                  className="text-[13px] font-medium text-black hover:underline mt-1 inline-block"
-                >
-                  See all donations &rarr;
-                </Link>
+                </div>
               </div>
             </div>
           </div>

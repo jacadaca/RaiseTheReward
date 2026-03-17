@@ -41,8 +41,7 @@ function CasesContent() {
             </h1>
             <p className="text-[14px] text-gray-400">
               {filtered.length} case{filtered.length !== 1 ? "s" : ""} found
-              {search.trim() ? ` for \u201c${search}\u201d` : ""} &middot;
-              $251,750 total held
+              {search.trim() ? ` for \u201c${search}\u201d` : ""}
             </p>
           </div>
           <Link
