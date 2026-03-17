@@ -94,9 +94,9 @@ export default function Home() {
       {/* ── HOW IT WORKS ── */}
       <section className="py-16 px-8 max-w-[900px] mx-auto">
         <h2 className="font-serif text-[clamp(26px,3.5vw,40px)] tracking-tight text-center mb-3">
-          Crowdfunding rewards is easy,
+          Easy, powerful,
           <br />
-          powerful, and trusted
+          and trusted
         </h2>
         <p className="text-[16px] text-gray-500 text-center max-w-[520px] mx-auto mb-12">
           Unlike GoFundMe, your money never goes to the family &mdash; it goes
