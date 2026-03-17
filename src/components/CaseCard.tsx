@@ -7,16 +7,28 @@ export default function CaseCard({ c }: { c: Case }) {
       href={`/case/${c.id}`}
       className="block rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white"
     >
-      {/* Photo placeholder */}
+      {/* Photo or placeholder */}
       <div
-        className="h-[180px] flex items-center justify-center relative"
+        className="h-[180px] flex items-center justify-center relative overflow-hidden"
         style={{ background: c.color }}
       >
-        <span className="text-white/30 text-[64px] font-serif font-bold">
-          {c.initials}
-        </span>
+        {c.imageUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={c.imageUrl}
+            alt={c.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="text-white/30 text-[64px] font-serif font-bold">
+            {c.initials}
+          </span>
+        )}
         <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[11px] font-medium px-2.5 py-1 rounded-full">
           {c.loc}
+        </div>
+        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+          {c.source}
         </div>
       </div>
 
@@ -26,10 +38,10 @@ export default function CaseCard({ c }: { c: Case }) {
         </div>
 
         <div className="text-[14px] font-semibold text-black mt-2">
-          {c.reward} raised
+          {c.rewardNum === 0 ? "No donations yet" : `${c.reward} raised`}
         </div>
         <div className="text-[12px] text-gray-400">
-          {c.donors} donations
+          {c.donors === 0 ? "Be the first to donate" : `${c.donors} donations`}
         </div>
       </div>
     </Link>

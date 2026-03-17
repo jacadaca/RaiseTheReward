@@ -24,22 +24,22 @@ export default function TermsPage() {
 
         <div className="text-[14px] text-gray-500 leading-relaxed space-y-4">
           <p>
-            RaiseTheReward.com (&ldquo;RTR&rdquo;) is a crowdsourced reward
+            RaiseTheReward.com (&ldquo;RaiseTheReward&rdquo;) is a crowdsourced reward
             platform operated by RaiseTheReward, Inc., a Delaware C-Corporation.
           </p>
           <p>
             By using this platform, you agree that all donations are irrevocable
-            once committed. RTR charges a 4% platform fee on all donations.
+            once committed. RaiseTheReward charges a 4% platform fee on all donations.
             Stripe processing fees also apply.
           </p>
           <p>
-            RTR does not accept, evaluate, or relay tips. All tips must be
-            submitted directly to law enforcement. RTR is not responsible for
+            RaiseTheReward does not accept, evaluate, or relay tips. All tips must be
+            submitted directly to law enforcement. RaiseTheReward is not responsible for
             the outcome of any case.
           </p>
           <p>
             Reward disbursement requires official documentation from law
-            enforcement and board approval. RTR reserves the right to deny
+            enforcement and board approval. RaiseTheReward reserves the right to deny
             claims that do not meet verification requirements.
           </p>
         </div>

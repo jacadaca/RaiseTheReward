@@ -58,7 +58,7 @@ export default function PricingPage() {
         </div>
 
         <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black">
-          <strong>Example:</strong> On a $100 donation, $4.00 goes to the RTR
+          <strong>Example:</strong> On a $100 donation, $4.00 goes to the RaiseTheReward
           platform fee and $3.20 goes to Stripe processing. $92.80 goes directly
           to the reward pool.
         </div>

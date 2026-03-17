@@ -38,12 +38,21 @@ export default function CaseHubPage({
           <div>
             {/* Case photo placeholder */}
             <div
-              className="w-full h-[340px] rounded-2xl flex items-center justify-center mb-4 relative"
+              className="w-full h-[340px] rounded-2xl flex items-center justify-center mb-4 relative overflow-hidden"
               style={{ background: c.color }}
             >
-              <span className="text-white/20 text-[120px] font-serif font-bold">
-                {c.initials}
-              </span>
+              {c.imageUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={c.imageUrl}
+                  alt={c.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-white/20 text-[120px] font-serif font-bold">
+                  {c.initials}
+                </span>
+              )}
               <div className="absolute top-4 left-4 flex gap-2">
                 <span className="bg-white/90 backdrop-blur text-[12px] font-medium px-3 py-1 rounded-full text-black">
                   {c.type}
@@ -85,7 +94,7 @@ export default function CaseHubPage({
               <p className="text-[15px] text-gray-700 leading-relaxed">
                 {showFullSummary
                   ? c.summary +
-                    " All tips should be submitted directly to law enforcement. RTR is not a tip intake platform and does not evaluate tips. The reward pool is held by RTR and will only be disbursed upon verified case resolution with official documentation reviewed and approved by the RTR board."
+                    " All tips should be submitted directly to law enforcement. RaiseTheReward is not a tip intake platform and does not evaluate tips. The reward pool is held by RaiseTheReward and will only be disbursed upon verified case resolution with official documentation reviewed and approved by the RaiseTheReward board."
                   : c.summary}
               </p>
               <button
@@ -135,7 +144,7 @@ export default function CaseHubPage({
               {[
                 "Law enforcement confirms the case resolution",
                 "Tipster identified and confirmed by law enforcement",
-                "Claimant submits official documentation to RTR",
+                "Claimant submits official documentation to RaiseTheReward",
                 "Platform board reviews and approves disbursement",
               ].map((s, i) => (
                 <div key={i} className="flex gap-2.5 mb-2 text-[14px] text-gray-600">
@@ -149,7 +158,7 @@ export default function CaseHubPage({
             <div className="mb-8 pb-8 border-b border-gray-100">
               <h3 className="text-[18px] font-semibold mb-2">Where to submit tips</h3>
               <p className="text-[14px] text-gray-500 mb-3">
-                RTR does not accept or handle tips. Contact law enforcement directly:
+                RaiseTheReward does not accept or handle tips. Contact law enforcement directly:
               </p>
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-3">
                 <div className="text-[14px] font-medium text-black mb-1">

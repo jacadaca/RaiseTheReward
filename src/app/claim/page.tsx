@@ -49,7 +49,7 @@ export default function ClaimPage() {
             <strong className="text-black">
               {selected?.name ?? "this case"}
             </strong>{" "}
-            has been submitted. The RTR board will review your documentation and
+            has been submitted. The RaiseTheReward board will review your documentation and
             contact you within 5&ndash;7 business days.
           </p>
 
@@ -73,7 +73,7 @@ export default function ClaimPage() {
           </div>
 
           <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-6">
-            The RTR board will independently verify all documentation with law
+            The RaiseTheReward board will independently verify all documentation with law
             enforcement before any reward is disbursed.
           </div>
 
@@ -111,7 +111,7 @@ export default function ClaimPage() {
         </p>
 
         <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-6">
-          <strong>Important:</strong> RTR does not evaluate tips or determine
+          <strong>Important:</strong> RaiseTheReward does not evaluate tips or determine
           who solved a case. Only proceed if law enforcement has already
           confirmed your role.
         </div>
@@ -214,7 +214,7 @@ export default function ClaimPage() {
         {step === 2 && (
           <>
             <p className="text-[14px] text-gray-400 mb-4">
-              Provide your identity so the RTR board can verify your claim with
+              Provide your identity so the RaiseTheReward board can verify your claim with
               law enforcement.
             </p>
 
@@ -390,7 +390,7 @@ export default function ClaimPage() {
 
             <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-4">
               <strong>Warning:</strong> Filing a fraudulent reward claim is a
-              serious matter. RTR independently verifies all claims with law
+              serious matter. RaiseTheReward independently verifies all claims with law
               enforcement before disbursing any reward.
             </div>
 

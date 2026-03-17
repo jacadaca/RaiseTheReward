@@ -23,7 +23,7 @@ export default function HowItWorksPage() {
             {
               n: 1,
               t: "A case is submitted",
-              b: "A family member, journalist, or concerned citizen submits a case to the RTR board. The board reviews and verifies the case before it goes live on the platform.",
+              b: "A family member, journalist, or concerned citizen submits a case to the RaiseTheReward board. The board reviews and verifies the case before it goes live on the platform.",
             },
             {
               n: 2,
@@ -33,7 +33,7 @@ export default function HowItWorksPage() {
             {
               n: 3,
               t: "Tips go directly to law enforcement",
-              b: "RTR is not a tip intake platform. Tipsters submit information directly to the FBI, local police, or Crime Stoppers. We play no role in evaluating tips or determining who solved a case.",
+              b: "RaiseTheReward is not a tip intake platform. Tipsters submit information directly to the FBI, local police, or Crime Stoppers. We play no role in evaluating tips or determining who solved a case.",
             },
             {
               n: 4,
@@ -43,7 +43,7 @@ export default function HowItWorksPage() {
             {
               n: 5,
               t: "The reward is disbursed",
-              b: "The qualifying tipster submits official documentation (law enforcement confirmation letter, Crime Stoppers payout documentation, or court records) to RTR. The board reviews and approves the disbursement.",
+              b: "The qualifying tipster submits official documentation (law enforcement confirmation letter, Crime Stoppers payout documentation, or court records) to RaiseTheReward. The board reviews and approves the disbursement.",
             },
           ].map((s) => (
             <div key={s.n} className="flex gap-4 mb-6">
@@ -68,7 +68,7 @@ export default function HowItWorksPage() {
           {[
             "Family never touches donated money — by design",
             "All donations are irrevocable once committed",
-            "Tips go to law enforcement, not to RTR",
+            "Tips go to law enforcement, not to RaiseTheReward",
             "Payout only on verified resolution with official documentation",
             "Board oversight on every disbursement",
           ].map((p) => (
@@ -81,9 +81,9 @@ export default function HowItWorksPage() {
 
         {/* Warning */}
         <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-8">
-          <strong>Important:</strong> RTR is not a tip intake platform and does
+          <strong>Important:</strong> RaiseTheReward is not a tip intake platform and does
           not evaluate tips. All tips must be submitted directly to law
-          enforcement. RTR only handles the reward pool and disbursement after
+          enforcement. RaiseTheReward only handles the reward pool and disbursement after
           law enforcement confirms resolution.
         </div>
 

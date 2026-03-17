@@ -19,7 +19,7 @@ export interface Case {
   leContact: string;
   /** Photo URL from source (if available) */
   imageUrl?: string;
-  /** Date the case was added to RTR */
+  /** Date the case was added to RaiseTheReward */
   dateAdded: string;
 }
 
@@ -52,7 +52,7 @@ function getInitials(name: string): string {
 
 // ─── REAL CASES ──────────────────────────────────────────────
 // Sourced from public FBI Wanted, NCMEC, and other LE databases.
-// All reward pools start at $0 — crowdfunding begins on RTR.
+// All reward pools start at $0 — crowdfunding begins on RaiseTheReward.
 
 export const CASES: Case[] = [
   // ── FBI Most Wanted ──
@@ -89,6 +89,7 @@ export const CASES: Case[] = [
     source: "FBI",
     sourceUrl: "https://www.fbi.gov/wanted/topten/alexis-flores",
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
+    imageUrl: "https://www.fbi.gov/wanted/topten/alexis-flores/@@images/image/preview",
     dateAdded: "2026-03-17",
   },
   {
@@ -106,6 +107,7 @@ export const CASES: Case[] = [
     source: "FBI",
     sourceUrl: "https://www.fbi.gov/wanted/topten/bhadreshkumar-chetanbhai-patel",
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
+    imageUrl: "https://www.fbi.gov/wanted/topten/bhadreshkumar-chetanbhai-patel/@@images/image/preview",
     dateAdded: "2026-03-17",
   },
   {
@@ -123,6 +125,7 @@ export const CASES: Case[] = [
     source: "FBI",
     sourceUrl: "https://www.fbi.gov/wanted/topten/eugene-palmer",
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
+    imageUrl: "https://www.fbi.gov/wanted/topten/eugene-palmer/@@images/image/preview",
     dateAdded: "2026-03-17",
   },
 

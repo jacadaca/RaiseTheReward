@@ -24,7 +24,7 @@ export default function PrivacyPage() {
 
         <div className="text-[14px] text-gray-500 leading-relaxed space-y-4">
           <p>
-            RaiseTheReward.com (&ldquo;RTR&rdquo;) takes the privacy and safety
+            RaiseTheReward.com (&ldquo;RaiseTheReward&rdquo;) takes the privacy and safety
             of its users seriously. This is especially important given the
             sensitive nature of the cases on our platform.
           </p>
@@ -38,8 +38,8 @@ export default function PrivacyPage() {
             verification purposes.
           </p>
           <p>
-            RTR uses Stripe for payment processing. Your payment information is
-            handled directly by Stripe and is never stored on RTR servers.
+            RaiseTheReward uses Stripe for payment processing. Your payment information is
+            handled directly by Stripe and is never stored on RaiseTheReward servers.
           </p>
           <p>
             We use essential cookies to maintain your session. We do not use

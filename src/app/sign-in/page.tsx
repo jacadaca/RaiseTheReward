@@ -58,7 +58,7 @@ export default function SignInPage() {
         <p className="text-[14px] text-gray-400 text-center mb-6">
           {mode === "login"
             ? "Sign in to manage your donations and reward funds."
-            : "Join RTR to donate, submit cases, and track rewards."}
+            : "Join RaiseTheReward to donate, submit cases, and track rewards."}
         </p>
 
         {/* Social buttons */}

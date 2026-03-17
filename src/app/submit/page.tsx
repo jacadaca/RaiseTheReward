@@ -41,7 +41,7 @@ export default function SubmitPage() {
           </h1>
           <p className="text-[14px] text-gray-400 mb-3">
             Your case &ldquo;{caseName || "Untitled"}&rdquo; has been submitted
-            to the RTR board for review. You&rsquo;ll receive an email once
+            to the RaiseTheReward board for review. You&rsquo;ll receive an email once
             it&rsquo;s approved and live on the platform.
           </p>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 text-[13px] text-left mb-6">
@@ -91,7 +91,7 @@ export default function SubmitPage() {
           Start a Reward
         </h1>
         <p className="text-[14px] text-gray-400 mb-6">
-          All cases are reviewed by the RTR board before going live. Only
+          All cases are reviewed by the RaiseTheReward board before going live. Only
           verified, legitimate cases are published.
         </p>
 
@@ -300,7 +300,7 @@ export default function SubmitPage() {
           <>
             <p className="text-[14px] text-gray-400 mb-4">
               Your contact information is kept confidential and only used by the
-              RTR board for case verification.
+              RaiseTheReward board for case verification.
             </p>
 
             <div className="mb-3.5">
@@ -357,7 +357,7 @@ export default function SubmitPage() {
             </label>
 
             <div className="bg-gray-100 border border-gray-300 rounded-lg px-3.5 py-2.5 text-[13px] text-black mb-4">
-              By submitting, you agree to the RTR{" "}
+              By submitting, you agree to the RaiseTheReward{" "}
               <Link href="/terms" className="underline">
                 Terms of Service
               </Link>{" "}

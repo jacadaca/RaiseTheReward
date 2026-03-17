@@ -184,7 +184,7 @@ export default function DonatePage({
                 <span>${amount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between mb-1.5 text-gray-400">
-                <span>RTR platform fee (4%)</span>
+                <span>RaiseTheReward platform fee (4%)</span>
                 <span>&minus;${fee}</span>
               </div>
               <div className="flex justify-between mb-1.5 text-gray-400">
