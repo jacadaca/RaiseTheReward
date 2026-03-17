@@ -19,7 +19,7 @@ export default function Home() {
           You want to help.<br />
           <span className="text-[var(--color-brand)]">Now you can.</span>
         </h1>
-        <p className="text-[17px] text-gray-500 max-w-[680px] mx-auto mb-8 leading-relaxed text-left">
+        <p className="text-[17px] text-gray-500 max-w-[680px] mx-auto mb-8 leading-relaxed">
           <strong>Raise The Reward</strong> uses crowdfunding to pool together a
           financial reward for information that leads to the resolution of any
           missing persons, unsolved crime and wanted individual case. People
@@ -227,7 +227,7 @@ export default function Home() {
           Does someone need to come home?
         </h2>
         <p className="text-[16px] text-white/70 mb-8 max-w-[440px] mx-auto">
-          Start a Reward fund in minutes. Your money is held until the case
+          Start a Reward in minutes. Your money is held until the case
           closes &mdash; then it goes to the person who brought answers.
         </p>
         <div className="flex gap-3 justify-center">
@@ -235,7 +235,7 @@ export default function Home() {
             href="/submit"
             className="px-7 py-3 rounded-full text-[16px] font-semibold bg-white text-black"
           >
-            Start a Reward fund
+            Start a Reward
           </Link>
           <Link
             href="/cases"
