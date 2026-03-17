@@ -3,9 +3,22 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
 import SearchBar from "@/components/SearchBar";
-import { CASES } from "@/lib/cases";
+import { FEATURED_CASES } from "@/lib/cases";
+import { getFeaturedCases } from "@/sanity/cases";
+import { sanityCaseToDisplay } from "@/lib/caseAdapter";
 
-export default function Home() {
+export const revalidate = 60;
+
+async function loadFeatured() {
+  try {
+    const sanityCases = await getFeaturedCases();
+    if (sanityCases.length > 0) return sanityCases.map(sanityCaseToDisplay);
+  } catch { /* Sanity not ready — fall back */ }
+  return FEATURED_CASES;
+}
+
+export default async function Home() {
+  const featuredCases = await loadFeatured();
   return (
     <>
       <Nav />
@@ -134,7 +147,7 @@ export default function Home() {
       {/* ── DISCOVER CASES ── */}
       <section className="py-14 px-8 bg-gray-50">
         <div className="max-w-[1000px] mx-auto">
-          {CASES.length > 0 ? (
+          {featuredCases.length > 0 ? (
             <>
               <div className="flex items-end justify-between mb-8">
                 <div>
@@ -154,7 +167,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="grid gap-5 grid-cols-4">
-                {CASES.slice(0, 4).map((c) => (
+                {featuredCases.slice(0, 4).map((c) => (
                   <CaseCard key={c.id} c={c} />
                 ))}
               </div>

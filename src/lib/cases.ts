@@ -21,6 +21,10 @@ export interface Case {
   imageUrl?: string;
   /** Date the case was added to RaiseTheReward */
   dateAdded: string;
+  /** Show this case on the site (set false to hide without deleting) */
+  visible?: boolean;
+  /** Feature this case on the homepage hero row */
+  featured?: boolean;
 }
 
 /**
@@ -73,6 +77,8 @@ export const CASES: Case[] = [
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
     imageUrl: "https://www.fbi.gov/wanted/topten/ruja-ignatova/@@images/image/large",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: true,
   },
   {
     id: "alexis-flores",
@@ -91,6 +97,8 @@ export const CASES: Case[] = [
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
     imageUrl: "https://www.fbi.gov/wanted/topten/alexis-flores/@@images/image/large",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "bhadreshkumar-patel",
@@ -109,6 +117,8 @@ export const CASES: Case[] = [
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
     imageUrl: "https://www.fbi.gov/wanted/topten/bhadreshkumar-chetanbhai-patel/@@images/image/large",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "eugene-palmer",
@@ -127,6 +137,8 @@ export const CASES: Case[] = [
     leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
     imageUrl: "https://www.fbi.gov/wanted/topten/eugene-palmer/@@images/image/large",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
 
   // ── Missing Persons (NCMEC / NamUs / Public Record) ──
@@ -147,6 +159,8 @@ export const CASES: Case[] = [
     leContact: "Multnomah County Sheriff's Office: (503) 261-2847",
     imageUrl: "https://www.missingkids.org/poster/NCMC/1146067/1/screen",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: true,
   },
   {
     id: "asha-degree",
@@ -165,6 +179,8 @@ export const CASES: Case[] = [
     leContact: "Cleveland County Sheriff's Office: (704) 484-4822 or FBI Charlotte: (704) 672-6100",
     imageUrl: "https://www.missingkids.org/poster/NCMC/1205987/1/screen",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "michaela-garecht",
@@ -183,6 +199,8 @@ export const CASES: Case[] = [
     leContact: "Hayward Police Department: (510) 293-7000 or FBI San Francisco",
     imageUrl: "https://www.missingkids.org/poster/NCMC/1132367/1/screen",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "relisha-rudd",
@@ -201,6 +219,8 @@ export const CASES: Case[] = [
     leContact: "DC Metropolitan Police: (202) 727-9099 or FBI Washington: (202) 278-2000",
     imageUrl: "https://www.missingkids.org/poster/NCMC/1255450/1/screen",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
 
   // ── Unsolved Crimes (Public Record / Crime Stoppers) ──
@@ -221,6 +241,8 @@ export const CASES: Case[] = [
     leContact: "Indiana State Police: (800) 382-7537 or Tip Line: abbyandlibbytip@cacoshrf.com",
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/5/5f/Abby_Williams_and_Libby_German.jpg",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: true,
   },
   {
     id: "missy-bevers",
@@ -239,6 +261,8 @@ export const CASES: Case[] = [
     leContact: "Midlothian Police Department: (972) 775-3333",
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/5/5c/Missy_Bevers.jpg",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "springfield-three",
@@ -257,6 +281,8 @@ export const CASES: Case[] = [
     leContact: "Springfield Police Department: (417) 864-1810 or Crime Stoppers: (417) 869-TIPS",
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/f/f3/Springfield_Three_Missing_Women.jpg",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: false,
   },
   {
     id: "natalee-holloway",
@@ -275,5 +301,18 @@ export const CASES: Case[] = [
     leContact: "FBI: tips.fbi.gov or 1-800-CALL-FBI",
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/1/14/Natalee_Holloway.jpg",
     dateAdded: "2026-03-17",
+    visible: true,
+    featured: true,
   },
 ];
+
+// ─── FILTERED EXPORTS ───────────────────────────────────────
+// Use these instead of CASES directly so visibility/featuring is respected.
+
+/** Only cases marked visible — use on the browse page */
+export const VISIBLE_CASES = CASES.filter((c) => c.visible !== false);
+
+/** Cases marked featured — use on the homepage hero row */
+export const FEATURED_CASES = CASES.filter(
+  (c) => c.visible !== false && c.featured === true
+);

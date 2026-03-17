@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
-import { CASES } from "@/lib/cases";
+import { VISIBLE_CASES } from "@/lib/cases";
+import type { Case } from "@/lib/cases";
 
 const FILTERS = [
   "All",
@@ -15,13 +16,55 @@ const FILTERS = [
   "Wanted Individual",
 ];
 
+/** Map Sanity case shape to the DisplayCase/Case shape CaseCard expects */
+function mapSanityCase(c: Record<string, unknown>): Case {
+  return {
+    id: (c.slug as string) ?? "",
+    name: (c.name as string) ?? "",
+    type: (c.caseType as Case["type"]) ?? "Wanted Individual",
+    reward: (c.rewardNum as number) > 0 ? `$${(c.rewardNum as number).toLocaleString()}` : "$0",
+    rewardNum: (c.rewardNum as number) ?? 0,
+    donors: (c.donors as number) ?? 0,
+    loc: (c.location as string) ?? "",
+    summary: (c.summary as string) ?? "",
+    color: (c.color as string) ?? "#999",
+    initials: (c.initials as string) ?? "?",
+    source: (c.source as Case["source"]) ?? "FBI",
+    sourceUrl: (c.sourceUrl as string) ?? "",
+    leContact: (c.leContact as string) ?? "",
+    imageUrl: c.imageUrl as string | undefined,
+    dateAdded: (c.dateAdded as string) ?? "",
+    visible: true,
+    featured: (c.featured as boolean) ?? false,
+  };
+}
+
 function CasesContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") ?? "";
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState(initialQuery);
+  const [cases, setCases] = useState<Case[]>(VISIBLE_CASES);
+  const [loaded, setLoaded] = useState(false);
 
-  const filtered = CASES.filter((c) => {
+  // Try to load from Sanity via API, fall back to static
+  useEffect(() => {
+    if (loaded) return;
+    fetch("/api/cases")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.cases && data.cases.length > 0) {
+          const visible = (data.cases as Record<string, unknown>[])
+            .filter((c) => c.visible === true)
+            .map(mapSanityCase);
+          if (visible.length > 0) setCases(visible);
+        }
+      })
+      .catch(() => { /* keep static fallback */ })
+      .finally(() => setLoaded(true));
+  }, [loaded]);
+
+  const filtered = cases.filter((c) => {
     const matchesFilter = filter === "All" || c.type === filter;
     const matchesSearch =
       !search.trim() ||

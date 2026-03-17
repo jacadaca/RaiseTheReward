@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { CASES } from "@/lib/cases";
+import { VISIBLE_CASES } from "@/lib/cases";
 import type { Case } from "@/lib/cases";
 
 export default function ClaimPage() {
@@ -14,12 +14,12 @@ export default function ClaimPage() {
   const [docs, setDocs] = useState<string[]>([]);
 
   const filtered = search.trim()
-    ? CASES.filter(
+    ? VISIBLE_CASES.filter(
         (c) =>
           c.name.toLowerCase().includes(search.toLowerCase()) ||
           c.loc.toLowerCase().includes(search.toLowerCase())
       )
-    : CASES.slice(0, 3);
+    : VISIBLE_CASES.slice(0, 3);
 
   function addDoc(name: string) {
     setDocs((d) => (d.includes(name) ? d : [...d, name]));

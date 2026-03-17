@@ -1,7 +1,6 @@
 import { createClient } from "next-sanity";
-import { createImageUrlBuilder } from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url";
 
+/** Read-only client (uses CDN, safe for public pages) */
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
@@ -9,8 +8,11 @@ export const client = createClient({
   useCdn: true,
 });
 
-const builder = createImageUrlBuilder(client);
-
-export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
-}
+/** Write client (needs SANITY_API_TOKEN, server-side only) */
+export const writeClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  apiVersion: "2024-01-01",
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+});
