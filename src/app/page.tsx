@@ -34,9 +34,7 @@ export default function Home() {
           Start a Reward
         </Link>
 
-        <div className="text-[13px] text-gray-400 mb-12">
-          Free to start &middot; 4% platform fee &middot; Powered by Stripe
-        </div>
+        <div className="mb-12" />
 
         {/* Hero case circles — like GoFundMe's photo circles */}
         <div className="flex justify-center gap-5 mb-0 pb-0">
@@ -79,9 +77,9 @@ export default function Home() {
       <section className="bg-amber-50/60 border-t border-b border-amber-100/80 py-5 px-8 flex justify-center gap-12 flex-wrap">
         {[
           { icon: "\u26A1", v: "Free to start", l: "No fee to create a reward" },
-          { icon: "\u{1F512}", v: "$251,750 held", l: "In active reward pools" },
-          { icon: "\u{1F91D}", v: "2,907 donors", l: "Across all cases" },
-          { icon: "\u2705", v: "100% verified", l: "Paid only on resolution" },
+          { icon: "\u{1F512}", v: "Protected donations", l: "Every dollar held securely by Stripe" },
+          { icon: "\u2705", v: "Board verified payouts", l: "Paid only on case resolution" },
+          { icon: "\u{1F91D}", v: "Trusted", l: "By families and law enforcement" },
         ].map((s) => (
           <div key={s.v} className="flex items-center gap-2.5">
             <span className="text-[22px]">{s.icon}</span>
