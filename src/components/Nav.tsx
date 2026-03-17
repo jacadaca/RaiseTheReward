@@ -26,7 +26,7 @@ export default function Nav() {
       </div>
 
       {/* Center: logo */}
-      <Link href="/" className="absolute left-1/2 -translate-x-1/2 font-serif text-[20px] text-black">
+      <Link href="/" className="absolute left-1/2 -translate-x-1/2 font-serif text-[26px] text-black">
         <span className="text-[var(--color-brand)]">Raise</span><span className="text-gray-400">the</span><span className="text-[var(--color-brand)]">Reward</span>
       </Link>
 
