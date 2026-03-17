@@ -25,16 +25,11 @@ export default function CaseCard({ c }: { c: Case }) {
           {c.name}
         </div>
 
-        {/* Progress bar */}
-        <div className="h-[5px] bg-gray-100 rounded-full mt-3 mb-2">
-          <div
-            className="h-[5px] bg-[var(--color-brand)] rounded-full"
-            style={{ width: `${c.pct}%` }}
-          />
-        </div>
-
-        <div className="text-[14px] font-semibold text-black">
+        <div className="text-[14px] font-semibold text-black mt-2">
           {c.reward} raised
+        </div>
+        <div className="text-[12px] text-gray-400">
+          {c.donors} donations
         </div>
       </div>
     </Link>

@@ -237,31 +237,12 @@ export default function CaseHubPage({
             <div className="sticky top-[76px]">
               <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                 {/* Progress ring + amount */}
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="relative w-[60px] h-[60px] shrink-0">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 60 60">
-                      <circle cx="30" cy="30" r="26" fill="none" stroke="#e5e7eb" strokeWidth="4" />
-                      <circle
-                        cx="30" cy="30" r="26"
-                        fill="none"
-                        stroke="var(--color-brand)"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                        strokeDasharray={`${c.pct * 1.63} 163`}
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-gray-700">
-                      {c.pct}%
-                    </div>
+                <div className="mb-4">
+                  <div className="text-[22px] font-bold text-black">
+                    {c.reward} raised
                   </div>
-                  <div>
-                    <div className="text-[22px] font-bold text-black">
-                      {c.reward} raised
-                    </div>
-                    <div className="text-[13px] text-gray-400">
-                      of ${c.goal.toLocaleString()} goal &middot; {c.donors}{" "}
-                      donations
-                    </div>
+                  <div className="text-[13px] text-gray-400">
+                    {c.donors} donations
                   </div>
                 </div>
 
