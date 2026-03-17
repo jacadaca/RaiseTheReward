@@ -2,8 +2,8 @@
 /**
  * Sync NamUs (National Missing and Unidentified Persons System) cases into Sanity.
  *
- * NamUs is a DOJ database. Their public search makes internal API calls
- * that return JSON. We replicate those calls.
+ * NamUs uses an internal search API at namus.nij.ojp.gov. The API is undocumented
+ * but publicly accessible — same calls the search page makes.
  *
  * Run: node scripts/sync-namus.mjs
  */
@@ -60,40 +60,38 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
-// ── NamUs Search API ──
-// The NamUs site uses an internal API for search results
-const NAMUS_API = "https://www.namus.gov/api/CaseSets/NamUs/MissingPersons/Results";
+// ── NamUs API ──
+// NamUs search API used by namus.nij.ojp.gov internally
+const NAMUS_SEARCH = "https://namus.nij.ojp.gov/api/CaseSets/NamUs/MissingPersons/Results";
 const PAGE_SIZE = 100;
 
 async function fetchPage(skip) {
+  // NamUs uses a POST body for search with projections
   const body = {
     take: PAGE_SIZE,
     skip,
     projections: [
-      "npisTattoosScarsBirthmarks",
-      "npisDmp",
       "npisMissingPerson",
-      "npisImage",
     ],
     conditions: [],
-    orderSpecifications: [
-      { fieldPath: "npisMissingPerson.DateOfLastContact", direction: "Descending" }
-    ],
   };
 
-  const res = await fetch(NAMUS_API, {
+  const res = await fetch(NAMUS_SEARCH, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
       "User-Agent": "RaiseTheReward/1.0 (missing-persons-awareness-platform)",
+      // NamUs may require these headers
+      Origin: "https://namus.nij.ojp.gov",
+      Referer: "https://namus.nij.ojp.gov/",
     },
     body: JSON.stringify(body),
   });
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`NamUs API HTTP ${res.status}: ${text.slice(0, 200)}`);
+    throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
   }
 
   return res.json();
@@ -102,86 +100,112 @@ async function fetchPage(skip) {
 async function sync() {
   console.log("Starting NamUs sync...\n");
 
+  // Try the search API first
   let skip = 0;
   let total = 0;
   let imported = 0;
   let skipped = 0;
   let errors = 0;
   let pageNum = 1;
+  let apiWorks = true;
 
-  while (true) {
-    process.stdout.write(`  Page ${pageNum}... `);
+  // Test first page
+  process.stdout.write("  Testing NamUs API... ");
+  try {
+    const testData = await fetchPage(0);
+    // Figure out the response shape
+    if (testData.count !== undefined) {
+      total = testData.count;
+    } else if (testData.totalCount !== undefined) {
+      total = testData.totalCount;
+    } else if (Array.isArray(testData)) {
+      total = testData.length;
+    } else {
+      console.log(`Unexpected response format. Keys: ${Object.keys(testData).join(", ")}`);
+      // Try to extract what we can
+      const snippet = JSON.stringify(testData).slice(0, 300);
+      console.log(`  Snippet: ${snippet}`);
+      apiWorks = false;
+    }
+
+    if (apiWorks) {
+      console.log(`found ${total} cases\n`);
+    }
+  } catch (err) {
+    console.log(`API error: ${err.message}`);
+    apiWorks = false;
+  }
+
+  if (!apiWorks) {
+    console.log("\n  NamUs internal API may require authentication or has changed.");
+    console.log("  NamUs does not have a public API — their data is only accessible");
+    console.log("  through their website at namus.nij.ojp.gov.");
+    console.log("  Consider reaching out to NamUs/NIJ for data partnership.\n");
+    return;
+  }
+
+  // Cap at a reasonable number
+  const maxCases = Math.min(total, 15000);
+  console.log(`  Will import up to ${maxCases} cases...\n`);
+
+  while (skip < maxCases) {
+    process.stdout.write(`  Page ${pageNum} (${skip}–${skip + PAGE_SIZE} of ${maxCases})... `);
 
     let data;
     try {
       data = await fetchPage(skip);
     } catch (err) {
       console.log(`ERROR: ${err.message}`);
-      // If NamUs API doesn't work, try the alternative endpoint
-      if (pageNum === 1) {
-        console.log("\n  NamUs internal API may have changed. Trying public search...");
-        try {
-          data = await tryPublicSearch();
-        } catch (err2) {
-          console.log(`  Public search also failed: ${err2.message}`);
-          console.log("  NamUs sync cannot proceed — their API may require authentication.");
-          break;
-        }
-      } else {
-        errors++;
-        break;
-      }
+      errors++;
+      if (errors > 5) { console.log("  Too many errors, stopping."); break; }
+      skip += PAGE_SIZE;
+      pageNum++;
+      continue;
     }
 
-    if (!data) break;
-
-    // Handle response format
-    const results = data.results ?? data.records ?? data;
-    if (!Array.isArray(results) || results.length === 0) {
-      if (pageNum === 1) {
-        console.log("No results returned. NamUs may have changed their API format.");
-        console.log(`  Response keys: ${Object.keys(data).join(", ")}`);
-      } else {
-        console.log("done (no more results)");
-      }
+    const results = data.results ?? data.records ?? (Array.isArray(data) ? data : []);
+    if (results.length === 0) {
+      console.log("done (no more results)");
       break;
-    }
-
-    if (pageNum === 1) {
-      total = data.count ?? data.totalCount ?? data.total ?? results.length;
-      console.log(`(${total} total cases)`);
     }
 
     let pageImported = 0;
 
     for (const r of results) {
-      // NamUs response structure varies — try common field paths
-      const firstName = r.firstName ?? r.npisMissingPerson?.FirstName ?? "";
-      const lastName = r.lastName ?? r.npisMissingPerson?.LastName ?? "";
-      const name = `${firstName} ${lastName}`.trim();
-      if (!name || name === "null null") { skipped++; continue; }
+      // NamUs nests data under npisMissingPerson
+      const mp = r.npisMissingPerson ?? r;
 
-      const caseId = r.id ?? r.npisMissingPerson?.NamusId ?? r.caseNumber ?? "";
-      const id = caseId ? `namus-${caseId}` : `namus-${slugify(name)}`;
+      const firstName = mp.firstName ?? mp.FirstName ?? r.firstName ?? "";
+      const lastName = mp.lastName ?? mp.LastName ?? r.lastName ?? "";
+      const name = `${firstName} ${lastName}`.trim();
+      if (!name) { skipped++; continue; }
+
+      const namusId = mp.namusId ?? mp.NamusId ?? r.id ?? r.namusId ?? "";
+      const idStr = String(namusId);
+      const id = idStr ? `namus-${idStr}` : `namus-${slugify(name)}`;
       const slug = slugify(name);
 
-      const state = r.stateOfLastContact ?? r.npisMissingPerson?.StateOfLastContact ?? "";
-      const city = r.cityOfLastContact ?? r.npisMissingPerson?.CityOfLastContact ?? "";
-      const location = [city, state].filter(Boolean).join(", ") || "United States";
+      const state = mp.stateOfLastContact ?? mp.StateOfLastContact ?? r.stateOfLastContact ?? "";
+      const city = mp.cityOfLastContact ?? mp.CityOfLastContact ?? r.cityOfLastContact ?? "";
+      const county = mp.countyOfLastContact ?? "";
+      const location = [city, county, state].filter(Boolean).join(", ") || "United States";
 
-      const dateOfLastContact = r.dateOfLastContact ?? r.npisMissingPerson?.DateOfLastContact ?? "";
-      const age = r.computedMissingMaxAge ?? r.currentAge ?? "";
+      const dateOfLastContact = mp.dateOfLastContact ?? mp.DateOfLastContact ?? r.dateOfLastContact ?? "";
+      const currentAge = mp.computedMissingMaxAge ?? r.computedMissingMaxAge ?? "";
+      const missingAge = mp.missingAge ?? "";
+      const sex = mp.gender ?? mp.sex ?? "";
+      const race = mp.raceEthnicity ?? mp.race ?? "";
 
-      const summary = `${name} has been missing since ${dateOfLastContact || "unknown date"}. ${age ? `Current estimated age: ${age}.` : ""} Last known location: ${location}.`;
+      let summary = `${name} has been missing since ${dateOfLastContact || "unknown date"}.`;
+      if (currentAge) summary += ` Estimated current age: ${currentAge}.`;
+      else if (missingAge) summary += ` Age when missing: ${missingAge}.`;
+      if (sex || race) summary += ` ${[sex, race].filter(Boolean).join(", ")}.`;
+      summary += ` Last known location: ${location}.`;
 
-      // Image
-      let imageUrl;
-      const imageData = r.npisImage ?? r.image;
-      if (imageData?.url) {
-        imageUrl = imageData.url.startsWith("http") ? imageData.url : `https://www.namus.gov${imageData.url}`;
-      } else if (caseId) {
-        imageUrl = `https://www.namus.gov/api/CaseSets/NamUs/MissingPersons/Cases/${caseId}/Images/Primary`;
-      }
+      // NamUs image
+      const imageUrl = namusId
+        ? `https://namus.nij.ojp.gov/api/CaseSets/NamUs/MissingPersons/Cases/${namusId}/Images/Primary`
+        : undefined;
 
       try {
         await sanity.createOrReplace({
@@ -192,10 +216,10 @@ async function sync() {
           caseType: "Missing Person",
           category: "NamUs Missing Person",
           location,
-          summary,
+          summary: summary.slice(0, 800),
           source: "NamUs",
-          sourceUrl: `https://namus.nij.ojp.gov/case/MP${caseId}`,
-          sourceId: String(caseId),
+          sourceUrl: `https://namus.nij.ojp.gov/case/MP${namusId}`,
+          sourceId: idStr,
           leContact: "NamUs: namus.nij.ojp.gov or contact your local law enforcement",
           imageUrl,
           dateAdded: dateOfLastContact || new Date().toISOString().split("T")[0],
@@ -219,13 +243,6 @@ async function sync() {
 
     skip += PAGE_SIZE;
     pageNum++;
-
-    // Safety cap
-    if (skip >= 20000) {
-      console.log("  Reached 20,000 case cap.");
-      break;
-    }
-
     await new Promise(r => setTimeout(r, 500));
   }
 
@@ -234,21 +251,6 @@ async function sync() {
   console.log(`  Skipped:  ${skipped}`);
   console.log(`  Errors:   ${errors}`);
   console.log(`========================================\n`);
-}
-
-/** Fallback: try NamUs public search page API */
-async function tryPublicSearch() {
-  const res = await fetch("https://namus.nij.ojp.gov/api/CaseSets/NamUs/MissingPersons/Search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "User-Agent": "RaiseTheReward/1.0",
-    },
-    body: JSON.stringify({ take: PAGE_SIZE, skip: 0 }),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
 }
 
 sync().catch(err => { console.error("Fatal:", err); process.exit(1); });

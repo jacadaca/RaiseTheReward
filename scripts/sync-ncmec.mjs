@@ -2,8 +2,10 @@
 /**
  * Sync NCMEC (National Center for Missing & Exploited Children) cases into Sanity.
  *
- * Uses the public search JSON endpoint that powers missingkids.org/search.
- * This is the same data the public website displays.
+ * Strategy:
+ *   1. Fetch the RSS feed to get case numbers (one feed per US state)
+ *   2. For each case number, fetch full details via the JSON detail endpoint
+ *   3. Upsert into Sanity
  *
  * Run: node scripts/sync-ncmec.mjs
  */
@@ -60,144 +62,204 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
-// ── NCMEC Search API ──
-// The missingkids.org search page makes POST requests to this endpoint
-const NCMEC_SEARCH = "https://api.missingkids.org/missingkids/servlet/JSONDataServlet";
-const PAGE_SIZE = 50;
+// ── NCMEC Endpoints ──
+const RSS_URL = "https://api.missingkids.org/missingkids/servlet/XmlServlet?act=rss&LanguageCountry=en_US&orgPrefix=NCMC";
+const DETAIL_URL = "https://api.missingkids.org/missingkids/servlet/JSONDataServlet";
 
-async function fetchPage(page) {
+const US_STATES = [
+  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
+  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
+  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
+  "VA","WA","WV","WI","WY","DC","PR",
+];
+
+/** Extract case numbers from RSS XML */
+function extractCaseNumbers(xml) {
+  const caseNums = new Set();
+  // Match caseNum= in URLs within the RSS
+  const urlPattern = /caseNum=(\d+)/g;
+  let match;
+  while ((match = urlPattern.exec(xml)) !== null) {
+    caseNums.add(match[1]);
+  }
+  // Also try matching <link> tags that contain case info
+  const linkPattern = /case\/(\d+)/g;
+  while ((match = linkPattern.exec(xml)) !== null) {
+    caseNums.add(match[1]);
+  }
+  return [...caseNums];
+}
+
+/** Fetch case detail by case number */
+async function fetchCaseDetail(caseNum) {
   const params = new URLSearchParams({
-    action: "publicSearch",
-    search: "new",
-    subjToSearch: "child",
-    missState: "US",
-    missCountry: "US",
+    action: "childDetail",
+    orgPrefix: "NCMC",
+    caseNum,
+    seqNum: "1",
+    caseLang: "en_US",
+    searchLang: "en_US",
     LanguageId: "en_US",
-    goToPage: String(page),
-    pageSize: String(PAGE_SIZE),
   });
 
-  const res = await fetch(`${NCMEC_SEARCH}?${params}`, {
+  const res = await fetch(`${DETAIL_URL}?${params}`, {
     headers: {
       Accept: "application/json",
       "User-Agent": "RaiseTheReward/1.0 (missing-persons-awareness-platform)",
     },
   });
 
-  if (!res.ok) {
-    throw new Error(`NCMEC API HTTP ${res.status}`);
-  }
+  if (!res.ok) return null;
 
-  return res.json();
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 async function sync() {
   console.log("Starting NCMEC sync...\n");
 
-  let page = 1;
-  let totalPages = 1;
+  // Step 1: Collect case numbers from RSS feeds (national + per-state)
+  console.log("  Step 1: Collecting case numbers from RSS feeds...");
+  const allCaseNums = new Set();
+
+  // National feed first
+  try {
+    const res = await fetch(RSS_URL, {
+      headers: { "User-Agent": "RaiseTheReward/1.0" },
+    });
+    if (res.ok) {
+      const xml = await res.text();
+      const nums = extractCaseNumbers(xml);
+      nums.forEach(n => allCaseNums.add(n));
+      console.log(`    National feed: ${nums.length} cases`);
+    }
+  } catch (err) {
+    console.log(`    National feed error: ${err.message}`);
+  }
+
+  // Per-state feeds
+  let statesProcessed = 0;
+  for (const state of US_STATES) {
+    try {
+      const url = `${RSS_URL}&state=${state}`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": "RaiseTheReward/1.0" },
+      });
+      if (res.ok) {
+        const xml = await res.text();
+        const nums = extractCaseNumbers(xml);
+        nums.forEach(n => allCaseNums.add(n));
+      }
+      statesProcessed++;
+      if (statesProcessed % 10 === 0) {
+        process.stdout.write(`    States: ${statesProcessed}/${US_STATES.length} (${allCaseNums.size} unique cases so far)\r`);
+      }
+    } catch { /* skip failed states */ }
+    await new Promise(r => setTimeout(r, 200));
+  }
+
+  console.log(`\n    Total unique case numbers found: ${allCaseNums.size}\n`);
+
+  if (allCaseNums.size === 0) {
+    console.log("  No case numbers found. NCMEC RSS may have changed format.");
+    console.log("  Try visiting this URL in your browser to check:");
+    console.log(`  ${RSS_URL}\n`);
+    return;
+  }
+
+  // Step 2: Fetch details for each case and upsert into Sanity
+  console.log("  Step 2: Fetching case details and importing...\n");
+  const caseNumArray = [...allCaseNums];
   let imported = 0;
   let skipped = 0;
   let errors = 0;
 
-  while (page <= totalPages && page <= 200) {
-    process.stdout.write(`  Page ${page}/${totalPages}... `);
+  for (let i = 0; i < caseNumArray.length; i++) {
+    const caseNum = caseNumArray[i];
 
-    let data;
+    if (i % 25 === 0) {
+      process.stdout.write(`    Progress: ${i}/${caseNumArray.length} (${imported} imported)\r`);
+    }
+
+    const detail = await fetchCaseDetail(caseNum);
+    if (!detail) { skipped++; continue; }
+
+    // NCMEC detail response can have varying structures
+    const child = detail.childBean ?? detail.child ?? detail;
+    const firstName = child.firstName ?? child.orgContactFirst ?? "";
+    const lastName = child.lastName ?? child.orgContactLast ?? "";
+    const name = `${firstName} ${lastName}`.trim();
+    if (!name) { skipped++; continue; }
+
+    const ncmcNumber = child.caseNumber ?? child.orgCaseNum ?? caseNum;
+    const id = `ncmec-${ncmcNumber}`;
+    const slug = slugify(name);
+
+    // Image
+    let imageUrl;
+    if (child.imgLrg) {
+      imageUrl = child.imgLrg.startsWith("http") ? child.imgLrg : `https://api.missingkids.org${child.imgLrg}`;
+    } else if (child.imgMed) {
+      imageUrl = child.imgMed.startsWith("http") ? child.imgMed : `https://api.missingkids.org${child.imgMed}`;
+    } else {
+      imageUrl = `https://api.missingkids.org/poster/NCMC/${ncmcNumber}/1/screen`;
+    }
+
+    const state = child.missingState ?? child.missState ?? "";
+    const city = child.missingCity ?? child.missCity ?? "";
+    const location = [city, state].filter(Boolean).join(", ") || "United States";
+
+    const missingDate = child.missingDate ?? child.dateMissing ?? "";
+    const age = child.approxAge ?? child.age ?? "";
+    const race = child.race ?? "";
+    const sex = child.sex ?? "";
+
+    let summary = `${name} has been missing since ${missingDate || "unknown date"}.`;
+    if (age) summary += ` Approximate current age: ${age}.`;
+    if (sex || race) summary += ` ${[sex, race].filter(Boolean).join(", ")}.`;
+    summary += ` Last seen in ${location}.`;
+    if (child.circumstance) {
+      summary += " " + child.circumstance.replace(/<[^>]*>/g, "").slice(0, 300);
+    }
+
     try {
-      data = await fetchPage(page);
+      await sanity.createOrReplace({
+        _id: id,
+        _type: "case",
+        name,
+        slug,
+        caseType: "Missing Person",
+        category: "Missing Child",
+        location,
+        summary: summary.slice(0, 800),
+        source: "NCMEC",
+        sourceUrl: `https://www.missingkids.org/poster/NCMC/${ncmcNumber}`,
+        sourceId: String(ncmcNumber),
+        leContact: "NCMEC: 1-800-THE-LOST (1-800-843-5678) or missingkids.org",
+        imageUrl,
+        dateAdded: missingDate || new Date().toISOString().split("T")[0],
+        visible: true,
+        featured: false,
+        rewardNum: 0,
+        donors: 0,
+        color: nameToColor(name),
+        initials: getInitials(name),
+        lastSynced: new Date().toISOString(),
+      });
+      imported++;
     } catch (err) {
-      console.log(`ERROR: ${err.message}`);
       errors++;
-      break;
+      if (errors <= 3) console.log(`\n    Error on "${name}": ${err.message}`);
     }
 
-    // First page: get total
-    if (page === 1) {
-      const total = data.totalRecords ?? data.totalChildren ?? 0;
-      totalPages = Math.ceil(total / PAGE_SIZE);
-      console.log(`(${total} total cases, ${totalPages} pages)`);
-      if (total === 0) {
-        console.log("  No results returned. NCMEC may have changed their API.");
-        break;
-      }
-    }
-
-    const children = data.persons ?? data.children ?? [];
-    if (children.length === 0) {
-      console.log("no items");
-      break;
-    }
-
-    let pageImported = 0;
-
-    for (const child of children) {
-      const firstName = child.firstName ?? "";
-      const lastName = child.lastName ?? "";
-      const name = `${firstName} ${lastName}`.trim();
-      if (!name) { skipped++; continue; }
-
-      const caseNum = child.caseNumber ?? child.orgCaseNum ?? "";
-      const ncmcNum = child.ncmcNumber ?? child.caseNum ?? caseNum;
-      const id = ncmcNum ? `ncmec-${ncmcNum}` : `ncmec-${slugify(name)}`;
-      const slug = slugify(name);
-
-      // Image URL
-      let imageUrl;
-      if (child.thumbnailUrl) {
-        imageUrl = child.thumbnailUrl.startsWith("http")
-          ? child.thumbnailUrl
-          : `https://api.missingkids.org${child.thumbnailUrl}`;
-      } else if (child.hasPoster && ncmcNum) {
-        imageUrl = `https://api.missingkids.org/poster/NCMC/${ncmcNum}/1/screen`;
-      }
-
-      const state = child.missingState ?? child.missState ?? "";
-      const city = child.missingCity ?? child.missCity ?? "";
-      const location = [city, state].filter(Boolean).join(", ") || "United States";
-
-      const missingDate = child.missingDate ?? "";
-      const age = child.approxAge ?? child.age ?? "";
-      const summary = `${name} has been missing since ${missingDate || "unknown date"}. ${age ? `Approximate age now: ${age}.` : ""} Last seen in ${location}.`;
-
-      try {
-        await sanity.createOrReplace({
-          _id: id,
-          _type: "case",
-          name,
-          slug,
-          caseType: "Missing Person",
-          category: "Missing Child",
-          location,
-          summary,
-          source: "NCMEC",
-          sourceUrl: `https://www.missingkids.org/poster/NCMC/${ncmcNum}`,
-          sourceId: ncmcNum,
-          leContact: "NCMEC: 1-800-THE-LOST (1-800-843-5678) or missingkids.org",
-          imageUrl,
-          dateAdded: missingDate || new Date().toISOString().split("T")[0],
-          visible: true,
-          featured: false,
-          rewardNum: 0,
-          donors: 0,
-          color: nameToColor(name),
-          initials: getInitials(name),
-          lastSynced: new Date().toISOString(),
-        });
-        imported++;
-        pageImported++;
-      } catch (err) {
-        errors++;
-        if (errors <= 3) console.log(`\n    Error on "${name}": ${err.message}`);
-      }
-    }
-
-    if (page > 1 || !data.totalRecords) console.log(`${pageImported} imported`);
-    page++;
-    await new Promise(r => setTimeout(r, 500)); // Be respectful
+    // Respectful delay
+    await new Promise(r => setTimeout(r, 150));
   }
 
-  console.log(`\n========================================`);
+  console.log(`\n\n========================================`);
   console.log(`  Imported: ${imported}`);
   console.log(`  Skipped:  ${skipped}`);
   console.log(`  Errors:   ${errors}`);
