@@ -35,7 +35,7 @@ export default function Home() {
           { icon: "\u26A1", v: "Free to start", l: "No fee to create a reward" },
           { icon: "\u{1F512}", v: "Protected donations", l: "Every dollar held securely by Stripe" },
           { icon: "\u2705", v: "Board verified payouts", l: "Paid only on case resolution" },
-          { icon: "\u{1F91D}", v: "Trusted", l: "By families and law enforcement" },
+          { icon: "\u{1F91D}", v: "Built for", l: "Families and law enforcement" },
         ].map((s) => (
           <div key={s.v} className="flex items-center gap-2.5">
             <span className="text-[22px]">{s.icon}</span>
@@ -133,35 +133,21 @@ export default function Home() {
 
       {/* ── DISCOVER CASES ── */}
       <section className="py-14 px-8 bg-gray-50">
-        <div className="max-w-[1000px] mx-auto">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight">
-                Discover open reward pools
-              </h2>
-              <p className="text-[15px] text-gray-500 mt-1">
-                Contribute to any case. Your donation is locked in &mdash;
-                irrevocable, transparent, paid only when the case resolves.
-              </p>
-            </div>
-            <Link
-              href="/cases"
-              className="text-[14px] font-medium text-[var(--color-brand)] hover:underline shrink-0"
-            >
-              See all &rarr;
-            </Link>
-          </div>
-
-          {/* Search */}
-          <div className="mb-8">
-            <SearchBar />
-          </div>
-
-          <div className="grid grid-cols-4 gap-5">
-            {CASES.map((c) => (
-              <CaseCard key={c.id} c={c} />
-            ))}
-          </div>
+        <div className="max-w-[700px] mx-auto text-center">
+          <h2 className="font-serif text-[clamp(24px,3vw,36px)] tracking-tight mb-3">
+            We just launched.
+          </h2>
+          <p className="text-[15px] text-gray-500 leading-relaxed mb-8 max-w-[520px] mx-auto">
+            There are no open reward pools yet &mdash; and that&rsquo;s where you
+            come in. Be the first to start a reward and help bring answers to
+            a family that needs them.
+          </p>
+          <Link
+            href="/submit"
+            className="inline-flex px-7 py-3 rounded-full text-[15px] font-semibold bg-[var(--color-brand)] text-white hover:opacity-90"
+          >
+            Start the first Reward &rarr;
+          </Link>
         </div>
       </section>
 
