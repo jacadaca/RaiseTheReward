@@ -1,10 +1,34 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { CASES } from "@/lib/cases";
+import type { Case } from "@/lib/cases";
+
+/** Map a Sanity case record to our Case shape */
+function mapSanityCase(c: Record<string, unknown>): Case {
+  return {
+    id: (c.slug as string) ?? "",
+    name: (c.name as string) ?? "",
+    type: (c.caseType as Case["type"]) ?? "Wanted Individual",
+    reward: (c.rewardNum as number) > 0 ? `$${(c.rewardNum as number).toLocaleString()}` : "$0",
+    rewardNum: (c.rewardNum as number) ?? 0,
+    donors: (c.donors as number) ?? 0,
+    loc: (c.location as string) ?? "",
+    summary: (c.summary as string) ?? "",
+    color: (c.color as string) ?? "#999",
+    initials: (c.initials as string) ?? "?",
+    source: (c.source as Case["source"]) ?? "FBI",
+    sourceUrl: (c.sourceUrl as string) ?? "",
+    leContact: (c.leContact as string) ?? "",
+    imageUrl: c.imageUrl as string | undefined,
+    dateAdded: (c.dateAdded as string) ?? "",
+    visible: true,
+    featured: (c.featured as boolean) ?? false,
+  };
+}
 
 export default function CaseHubPage({
   params,
@@ -12,9 +36,30 @@ export default function CaseHubPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const c = CASES.find((cs) => cs.id === id) ?? CASES[0];
+
+  // Try static first, then try Sanity
+  const staticCase = CASES.find((cs) => cs.id === id);
+  const [c, setC] = useState<Case>(staticCase ?? CASES[0]);
   const [showFullSummary, setShowFullSummary] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [loaded, setLoaded] = useState(!!staticCase);
+
+  useEffect(() => {
+    if (staticCase || loaded) return;
+    // Not found in static data — try Sanity
+    fetch("/api/cases")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.cases) {
+          const match = (data.cases as Record<string, unknown>[]).find(
+            (sc) => sc.slug === id
+          );
+          if (match) setC(mapSanityCase(match));
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, [id, staticCase, loaded]);
 
   return (
     <>
