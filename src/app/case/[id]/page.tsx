@@ -39,13 +39,11 @@ export default function CaseHubPage({
 
   // Try static first, then try Sanity
   const staticCase = CASES.find((cs) => cs.id === id);
-  const [c, setC] = useState<Case>(staticCase ?? CASES[0]);
-  const [showFullSummary, setShowFullSummary] = useState(false);
+  const [c, setC] = useState<Case | null>(staticCase ?? null);
   const [imgError, setImgError] = useState(false);
-  const [loaded, setLoaded] = useState(!!staticCase);
 
   useEffect(() => {
-    if (staticCase || loaded) return;
+    if (staticCase) return;
     // Not found in static data — try Sanity
     fetch("/api/cases")
       .then((r) => r.json())
@@ -57,9 +55,20 @@ export default function CaseHubPage({
           if (match) setC(mapSanityCase(match));
         }
       })
-      .catch(() => {})
-      .finally(() => setLoaded(true));
-  }, [id, staticCase, loaded]);
+      .catch(() => {});
+  }, [id, staticCase]);
+
+  if (!c) {
+    return (
+      <>
+        <Nav />
+        <div className="max-w-[960px] mx-auto px-8 py-20 text-center text-gray-400">
+          Loading case...
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -139,17 +148,8 @@ export default function CaseHubPage({
             {/* Summary */}
             <div className="mb-6">
               <p className="text-[15px] text-gray-700 leading-relaxed">
-                {showFullSummary
-                  ? c.summary +
-                    " All tips should be submitted directly to law enforcement. RaiseTheReward is not a tip intake platform and does not evaluate tips. The reward pool is held by RaiseTheReward and will only be disbursed upon verified case resolution with official documentation reviewed and approved by the RaiseTheReward board."
-                  : c.summary}
+                {c.summary} All tips should be submitted directly to law enforcement. RaiseTheReward is not a tip intake platform and does not evaluate tips. The reward pool is held by RaiseTheReward and will only be disbursed upon verified case resolution with official documentation reviewed and approved by the RaiseTheReward board.
               </p>
-              <button
-                onClick={() => setShowFullSummary(!showFullSummary)}
-                className="text-[14px] font-medium text-black mt-2 hover:underline"
-              >
-                {showFullSummary ? "Show less" : "Read more"}
-              </button>
             </div>
 
             {/* Inline Donate + Share buttons */}
