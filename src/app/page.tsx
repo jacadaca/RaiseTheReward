@@ -27,13 +27,6 @@ export default function Home() {
           money is only paid out when that case is closed.
         </p>
 
-        <Link
-          href="/submit"
-          className="inline-flex px-8 py-3.5 rounded-full text-[16px] font-semibold bg-[var(--color-brand)] text-white mb-4"
-        >
-          Start a Reward
-        </Link>
-
       </section>
 
       {/* ── TRUST BAR ── */}
