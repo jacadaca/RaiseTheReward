@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync-fbi": "node scripts/sync-fbi.mjs"
+    "sync-fbi": "node scripts/sync-fbi.mjs",
+    "sync-ncmec": "node scripts/sync-ncmec.mjs",
+    "sync-namus": "node scripts/sync-namus.mjs",
+    "sync-all": "node scripts/sync-all.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.0.0",
