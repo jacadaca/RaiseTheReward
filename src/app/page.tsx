@@ -19,7 +19,7 @@ export default function Home() {
           You want to help.<br />
           <span className="text-[var(--color-brand)]">Now you can.</span>
         </h1>
-        <p className="text-[17px] text-gray-500 max-w-[520px] mx-auto mb-8 leading-relaxed">
+        <p className="text-[17px] text-gray-500 max-w-[680px] mx-auto mb-8 leading-relaxed">
           <strong>Raise The Reward</strong> uses crowdfunding to pool together a
           financial reward for information that leads to the resolution of any
           missing persons, unsolved crime and wanted individual case. People
