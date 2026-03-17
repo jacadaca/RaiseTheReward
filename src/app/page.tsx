@@ -165,18 +165,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── QUOTE ── */}
-      <section className="bg-black py-16 px-8 text-center">
-        <blockquote className="font-serif text-[clamp(20px,2.5vw,32px)] text-white max-w-[680px] mx-auto mb-4 leading-[1.35] tracking-tight">
-          &ldquo;When a family goes on CNN and says &lsquo;please help find our
-          daughter&rsquo; &mdash; where does that public energy go? Until now,
-          nowhere.&rdquo;
-        </blockquote>
-        <cite className="text-[14px] text-gray-500 not-italic">
-          &mdash; RaiseTheReward.com
-        </cite>
-      </section>
-
       {/* ── COMPARISON ── */}
       <section className="py-16 px-8">
         <div className="max-w-[800px] mx-auto">
