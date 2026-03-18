@@ -9,7 +9,7 @@ export default function CaseCard({ c }: { c: Case }) {
 
   return (
     <Link
-      href={`/case/${c.id}`}
+      href={`/${c.id}`}
       className="block rounded-xl overflow-hidden hover:shadow-lg transition-shadow bg-white"
     >
       {/* Photo or placeholder */}
