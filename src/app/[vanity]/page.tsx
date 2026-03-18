@@ -192,7 +192,7 @@ export default function CasePage({
           <div>
             {/* Image gallery */}
             <div
-              className="w-full h-[340px] rounded-2xl flex items-center justify-center mb-2 relative overflow-hidden"
+              className="w-full h-[400px] rounded-2xl flex items-center justify-center mb-2 relative overflow-hidden"
               style={{ background: c.color }}
             >
               {allImages.length > 0 && !imgError ? (
@@ -200,7 +200,7 @@ export default function CasePage({
                 <img
                   src={allImages[selectedImg]?.url}
                   alt={c.name}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                   onError={() => setImgError(true)}
                 />
               ) : (

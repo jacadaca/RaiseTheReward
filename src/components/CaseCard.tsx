@@ -14,7 +14,7 @@ export default function CaseCard({ c }: { c: Case }) {
     >
       {/* Photo or placeholder */}
       <div
-        className="h-[180px] flex items-center justify-center relative overflow-hidden"
+        className="h-[220px] flex items-center justify-center relative overflow-hidden"
         style={{ background: c.color }}
       >
         {c.imageUrl && !imgError ? (
@@ -22,7 +22,7 @@ export default function CaseCard({ c }: { c: Case }) {
           <img
             src={c.imageUrl}
             alt={c.name}
-            className="w-full h-full object-cover"
+            className="h-full object-contain"
             onError={() => setImgError(true)}
           />
         ) : (
