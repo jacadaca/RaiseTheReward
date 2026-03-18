@@ -10,7 +10,8 @@
     "sync-fbi": "node scripts/sync-fbi.mjs",
     "sync-ncmec": "node scripts/sync-ncmec.mjs",
     "sync-namus": "node scripts/sync-namus.mjs",
-    "sync-all": "node scripts/sync-all.mjs"
+    "sync-all": "node scripts/sync-all.mjs",
+    "generate-vanity": "node scripts/generate-vanity-slugs.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.0.0",

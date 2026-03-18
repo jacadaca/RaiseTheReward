@@ -16,6 +16,7 @@ interface CaseItem {
   rewardNum: number;
   donors: number;
   lastSynced?: string;
+  vanitySlug?: string;
 }
 
 interface Counts {
@@ -396,6 +397,7 @@ export default function AdminPage() {
                       <th className="px-4 py-2.5">Category</th>
                       <th className="px-4 py-2.5">Source</th>
                       <th className="px-4 py-2.5">Location</th>
+                      <th className="px-4 py-2.5">Vanity URL</th>
                       <th className="px-4 py-2.5 text-center">Visible</th>
                       <th className="px-4 py-2.5 text-center">Featured</th>
                     </tr>
@@ -446,6 +448,15 @@ export default function AdminPage() {
                         </td>
                         <td className="px-4 py-2.5 text-gray-500 truncate max-w-[120px]">
                           {c.location}
+                        </td>
+                        <td className="px-4 py-2.5">
+                          {c.vanitySlug ? (
+                            <span className="text-[11px] font-mono text-blue-600">
+                              /{c.vanitySlug}
+                            </span>
+                          ) : (
+                            <span className="text-[11px] text-gray-300">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-2.5 text-center">
                           <button

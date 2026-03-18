@@ -31,6 +31,8 @@ export interface SanityCase {
   initials: string;
   /** When this record was last synced from the source */
   lastSynced?: string;
+  /** Short vanity URL slug, e.g. "nancyg" → raisethereward.com/nancyg */
+  vanitySlug?: string;
 }
 
 // ─── COLOR + INITIALS (same logic as before) ────────────────
@@ -58,11 +60,22 @@ export function getInitials(name: string): string {
     .join("");
 }
 
+/** Generate a default vanity slug from a name: "Nancy Guthrie" → "nancyg" */
+export function generateVanitySlug(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "";
+  const first = parts[0].toLowerCase().replace(/[^a-z]/g, "");
+  const lastInitial = parts.length > 1
+    ? parts[parts.length - 1][0]?.toLowerCase().replace(/[^a-z]/g, "") ?? ""
+    : "";
+  return `${first}${lastInitial}`;
+}
+
 // ─── QUERIES ────────────────────────────────────────────────
 const CASE_FIELDS = `
   _id, name, slug, caseType, category, location, summary,
   source, sourceUrl, sourceId, leContact, imageUrl, dateAdded,
-  visible, featured, rewardNum, donors, color, initials, lastSynced
+  visible, featured, rewardNum, donors, color, initials, lastSynced, vanitySlug
 `;
 
 /** All visible cases (for browse page) */
@@ -85,6 +98,28 @@ export async function getCaseBySlug(slug: string): Promise<SanityCase | null> {
     `*[_type == "case" && slug == $slug][0] { ${CASE_FIELDS} }`,
     { slug }
   );
+}
+
+/** Single case by vanity slug */
+export async function getCaseByVanity(vanitySlug: string): Promise<SanityCase | null> {
+  return client.fetch(
+    `*[_type == "case" && vanitySlug == $vanitySlug][0] { ${CASE_FIELDS} }`,
+    { vanitySlug }
+  );
+}
+
+/** Check if a vanity slug is already taken */
+export async function isVanityTaken(vanitySlug: string): Promise<boolean> {
+  const count = await client.fetch(
+    `count(*[_type == "case" && vanitySlug == $vanitySlug])`,
+    { vanitySlug }
+  );
+  return count > 0;
+}
+
+/** Set a vanity slug for a case */
+export async function setVanitySlug(id: string, vanitySlug: string): Promise<void> {
+  await writeClient.patch(id).set({ vanitySlug }).commit();
 }
 
 /** All cases (for admin — includes hidden ones) */
