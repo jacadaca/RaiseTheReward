@@ -60,6 +60,54 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
+function generateVanity(name) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "unknown";
+  const first = parts[0].toLowerCase().replace(/[^a-z]/g, "");
+  const lastInitial = parts.length > 1
+    ? (parts[parts.length - 1][0] || "").toLowerCase().replace(/[^a-z]/g, "")
+    : "";
+  return `${first}${lastInitial}` || "unknown";
+}
+
+const usedVanity = new Set();
+
+async function loadExistingVanity() {
+  try {
+    const existing = await sanity.fetch(`*[_type == "case" && defined(vanitySlug)].vanitySlug`);
+    existing.forEach(v => usedVanity.add(v));
+  } catch { /* ok */ }
+}
+
+function uniqueVanity(name) {
+  const base = generateVanity(name);
+  let vanity = base;
+  let counter = 2;
+  while (usedVanity.has(vanity)) { vanity = `${base}${counter}`; counter++; }
+  usedVanity.add(vanity);
+  return vanity;
+}
+
+async function smartUpsert(id, sourceData, name) {
+  const exists = await sanity.fetch(`count(*[_id == $id])`, { id });
+  if (exists > 0) {
+    await sanity.patch(id).set({
+      name: sourceData.name, slug: sourceData.slug,
+      caseType: sourceData.caseType, category: sourceData.category,
+      location: sourceData.location, summary: sourceData.summary,
+      sourceUrl: sourceData.sourceUrl, leContact: sourceData.leContact,
+      imageUrl: sourceData.imageUrl, color: sourceData.color,
+      initials: sourceData.initials, lastSynced: new Date().toISOString(),
+    }).commit();
+  } else {
+    await sanity.create({
+      _id: id, _type: "case", ...sourceData,
+      visible: true, featured: false, rewardNum: 0, donors: 0,
+      vanitySlug: uniqueVanity(name), lastSynced: new Date().toISOString(),
+    });
+  }
+}
+
 // ── RSS XML Parsing ──
 // Extract <item> blocks from the RSS XML and parse their fields
 function parseRSSItems(xml) {
@@ -134,6 +182,7 @@ const US_STATES = [
 
 async function sync() {
   console.log("Starting NCMEC sync...\n");
+  await loadExistingVanity();
 
   // Step 1: Collect all items from RSS feeds
   console.log("  Step 1: Fetching RSS feeds (national + 52 states/territories)...\n");
@@ -209,9 +258,7 @@ async function sync() {
     if (item.location) summary += ` Last seen in ${item.location}.`;
 
     try {
-      await sanity.createOrReplace({
-        _id: id,
-        _type: "case",
+      await smartUpsert(id, {
         name: item.name,
         slug,
         caseType: "Missing Person",
@@ -224,14 +271,9 @@ async function sync() {
         leContact: item.contact || "NCMEC: 1-800-THE-LOST (1-800-843-5678)",
         imageUrl: item.imageUrl || undefined,
         dateAdded: item.missingDate || new Date().toISOString().split("T")[0],
-        visible: true,
-        featured: false,
-        rewardNum: 0,
-        donors: 0,
         color: nameToColor(item.name),
         initials: getInitials(item.name),
-        lastSynced: new Date().toISOString(),
-      });
+      }, item.name);
       imported++;
     } catch (err) {
       errors++;

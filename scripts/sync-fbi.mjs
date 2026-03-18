@@ -76,6 +76,79 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
 }
 
+function generateVanity(name) {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "unknown";
+  const first = parts[0].toLowerCase().replace(/[^a-z]/g, "");
+  const lastInitial = parts.length > 1
+    ? (parts[parts.length - 1][0] || "").toLowerCase().replace(/[^a-z]/g, "")
+    : "";
+  return `${first}${lastInitial}` || "unknown";
+}
+
+// Track vanity slugs to avoid collisions within this run
+const usedVanity = new Set();
+
+async function loadExistingVanity() {
+  try {
+    const existing = await sanity.fetch(`*[_type == "case" && defined(vanitySlug)].vanitySlug`);
+    existing.forEach(v => usedVanity.add(v));
+  } catch { /* ok if empty */ }
+}
+
+function uniqueVanity(name) {
+  const base = generateVanity(name);
+  let vanity = base;
+  let counter = 2;
+  while (usedVanity.has(vanity)) {
+    vanity = `${base}${counter}`;
+    counter++;
+  }
+  usedVanity.add(vanity);
+  return vanity;
+}
+
+/**
+ * Smart upsert: creates new cases with full defaults,
+ * patches existing cases without overwriting admin fields
+ * (visible, featured, rewardNum, donors, vanitySlug).
+ */
+async function smartUpsert(id, sourceData, name) {
+  // Check if case already exists
+  const exists = await sanity.fetch(`count(*[_id == $id])`, { id });
+
+  if (exists > 0) {
+    // UPDATE existing: only patch source fields, preserve admin fields
+    await sanity.patch(id).set({
+      name: sourceData.name,
+      slug: sourceData.slug,
+      caseType: sourceData.caseType,
+      category: sourceData.category,
+      location: sourceData.location,
+      summary: sourceData.summary,
+      sourceUrl: sourceData.sourceUrl,
+      leContact: sourceData.leContact,
+      imageUrl: sourceData.imageUrl,
+      color: sourceData.color,
+      initials: sourceData.initials,
+      lastSynced: new Date().toISOString(),
+    }).commit();
+  } else {
+    // CREATE new: full document with defaults + vanity slug
+    await sanity.create({
+      _id: id,
+      _type: "case",
+      ...sourceData,
+      visible: true,
+      featured: false,
+      rewardNum: 0,
+      donors: 0,
+      vanitySlug: uniqueVanity(name),
+      lastSynced: new Date().toISOString(),
+    });
+  }
+}
+
 function mapCaseType(subjects) {
   if (!subjects) return "Wanted Individual";
   const joined = subjects.join(" ").toLowerCase();
@@ -95,6 +168,7 @@ const PAGE_SIZE = 20;
 
 async function sync() {
   console.log("Starting FBI sync...\n");
+  await loadExistingVanity();
 
   let page = 1;
   let totalPages = 1;
@@ -175,9 +249,7 @@ async function sync() {
         "United States";
 
       try {
-        await sanity.createOrReplace({
-          _id: `fbi-${item.uid}`,
-          _type: "case",
+        await smartUpsert(`fbi-${item.uid}`, {
           name,
           slug,
           caseType: mapCaseType(item.subjects),
@@ -190,14 +262,9 @@ async function sync() {
           leContact: "Contact your local FBI field office or submit a tip at tips.fbi.gov",
           imageUrl,
           dateAdded: item.publication || new Date().toISOString().split("T")[0],
-          visible: true,
-          featured: false,
-          rewardNum: 0,
-          donors: 0,
           color: nameToColor(name),
           initials: getInitials(name),
-          lastSynced: new Date().toISOString(),
-        });
+        }, name);
         imported++;
         pageImported++;
       } catch (err) {
