@@ -102,20 +102,37 @@ export default function AdminPage() {
     field: "visible" | "featured",
     value: boolean
   ) => {
+    // If featuring a case, also make it visible
+    const updates: Partial<CaseItem> = { [field]: value };
+    if (field === "featured" && value === true) {
+      updates.visible = true;
+    }
+    // If hiding a case, also unfeature it
+    if (field === "visible" && value === false) {
+      updates.featured = false;
+    }
+
     // Optimistic update
     setCases((prev) =>
-      prev.map((c) => (c._id === id ? { ...c, [field]: value } : c))
+      prev.map((c) => (c._id === id ? { ...c, ...updates } : c))
     );
     try {
-      await fetch("/api/cases", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "toggle", id, field, value }),
-      });
+      // Send all field updates
+      for (const [f, v] of Object.entries(updates)) {
+        await fetch("/api/cases", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "toggle", id, field: f, value: v }),
+        });
+      }
     } catch {
       // Revert on error
+      const reverts: Partial<CaseItem> = {};
+      for (const [f] of Object.entries(updates)) {
+        reverts[f as keyof CaseItem] = !updates[f as keyof CaseItem] as never;
+      }
       setCases((prev) =>
-        prev.map((c) => (c._id === id ? { ...c, [field]: !value } : c))
+        prev.map((c) => (c._id === id ? { ...c, ...reverts } : c))
       );
     }
   };

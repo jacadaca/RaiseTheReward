@@ -3,7 +3,6 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CaseCard from "@/components/CaseCard";
 import SearchBar from "@/components/SearchBar";
-import { FEATURED_CASES } from "@/lib/cases";
 import { getFeaturedCases } from "@/sanity/cases";
 import { sanityCaseToDisplay } from "@/lib/caseAdapter";
 
@@ -13,8 +12,10 @@ async function loadFeatured() {
   try {
     const sanityCases = await getFeaturedCases();
     if (sanityCases.length > 0) return sanityCases.map(sanityCaseToDisplay);
-  } catch { /* Sanity not ready — fall back */ }
-  return FEATURED_CASES;
+  } catch (err) {
+    console.error("Sanity featured query failed:", err);
+  }
+  return []; // Empty = show "We just launched" state
 }
 
 export default async function Home() {
