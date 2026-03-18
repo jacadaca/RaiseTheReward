@@ -118,19 +118,10 @@ async function smartUpsert(id, sourceData, name) {
   const exists = await sanity.fetch(`count(*[_id == $id])`, { id });
 
   if (exists > 0) {
-    // UPDATE existing: only patch source fields, preserve admin fields
+    // UPDATE existing: patch source fields + expanded fields, preserve admin fields
+    const { visible, featured, rewardNum, donors, vanitySlug, ...patchable } = sourceData;
     await sanity.patch(id).set({
-      name: sourceData.name,
-      slug: sourceData.slug,
-      caseType: sourceData.caseType,
-      category: sourceData.category,
-      location: sourceData.location,
-      summary: sourceData.summary,
-      sourceUrl: sourceData.sourceUrl,
-      leContact: sourceData.leContact,
-      imageUrl: sourceData.imageUrl,
-      color: sourceData.color,
-      initials: sourceData.initials,
+      ...patchable,
       lastSynced: new Date().toISOString(),
     }).commit();
   } else {
@@ -227,26 +218,32 @@ async function sync() {
 
       const name = item.title;
       const slug = slugify(name);
+      const strip = (html) => html ? html.replace(/<[^>]*>/g, "").trim() : "";
 
-      let imageUrl;
-      if (item.images && item.images.length > 0) {
-        const img = item.images[0];
-        imageUrl = img.large || img.original || img.thumb;
-      }
+      // All images (not just the first one)
+      const images = (item.images ?? [])
+        .map(img => ({
+          url: img.large || img.original || img.thumb || "",
+          caption: img.caption || "",
+        }))
+        .filter(img => img.url);
 
+      const imageUrl = images.length > 0 ? images[0].url : undefined;
+
+      // Build rich summary from all text fields
       let summary = "";
-      if (item.description) {
-        summary = item.description.replace(/<[^>]*>/g, "").slice(0, 500);
-      } else if (item.caution) {
-        summary = item.caution.replace(/<[^>]*>/g, "").slice(0, 500);
-      } else if (item.details) {
-        summary = item.details.replace(/<[^>]*>/g, "").slice(0, 500);
-      }
+      if (item.description) summary = strip(item.description).slice(0, 800);
+      else if (item.caution) summary = strip(item.caution).slice(0, 800);
+      else if (item.details) summary = strip(item.details).slice(0, 800);
 
       const location =
         item.field_offices?.join(", ") ||
         item.locations?.join(", ") ||
         "United States";
+
+      // Physical description
+      const height = [item.height_min, item.height_max].filter(Boolean).join(" - ") || item.height || "";
+      const weight = [item.weight_min, item.weight_max].filter(Boolean).join(" - ") || item.weight || "";
 
       try {
         await smartUpsert(`fbi-${item.uid}`, {
@@ -264,6 +261,28 @@ async function sync() {
           dateAdded: item.publication || new Date().toISOString().split("T")[0],
           color: nameToColor(name),
           initials: getInitials(name),
+          // ── Expanded fields ──
+          images,
+          aliases: item.aliases ?? [],
+          sex: item.sex ?? "",
+          race: item.race ?? item.race_raw ?? "",
+          hair: item.hair ?? item.hair_raw ?? "",
+          eyes: item.eyes ?? item.eyes_raw ?? "",
+          height,
+          weight,
+          build: item.build ?? "",
+          complexion: item.complexion ?? "",
+          scarsMarks: strip(item.scars_and_marks ?? ""),
+          ageRange: item.age_range ?? "",
+          datesOfBirth: item.dates_of_birth_used ?? [],
+          placeOfBirth: item.place_of_birth ?? "",
+          nationality: item.nationality ?? "",
+          languages: item.languages ?? [],
+          caution: strip(item.caution ?? ""),
+          warningMessage: strip(item.warning_message ?? ""),
+          officialRewardText: strip(item.reward_text ?? ""),
+          remarks: strip(item.remarks ?? "").slice(0, 1000),
+          occupations: item.occupations ?? [],
         }, name);
         imported++;
         pageImported++;

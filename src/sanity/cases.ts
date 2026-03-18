@@ -6,6 +6,11 @@
 import { client, writeClient } from "./client";
 
 // ─── TYPES ──────────────────────────────────────────────────
+export interface CaseImage {
+  url: string;
+  caption?: string;
+}
+
 export interface SanityCase {
   _id: string;
   _type: "case";
@@ -33,6 +38,42 @@ export interface SanityCase {
   lastSynced?: string;
   /** Short vanity URL slug, e.g. "nancyg" → raisethereward.com/nancyg */
   vanitySlug?: string;
+
+  // ── Expanded fields ──
+  /** Multiple images (first one is primary) */
+  images?: CaseImage[];
+  /** Known aliases */
+  aliases?: string[];
+  /** Physical description */
+  sex?: string;
+  race?: string;
+  hair?: string;
+  eyes?: string;
+  height?: string;
+  weight?: string;
+  build?: string;
+  complexion?: string;
+  scarsMarks?: string;
+  /** Age info */
+  ageRange?: string;
+  datesOfBirth?: string[];
+  placeOfBirth?: string;
+  nationality?: string;
+  languages?: string[];
+  /** FBI caution/warning text */
+  caution?: string;
+  warningMessage?: string;
+  /** FBI reward text (their reward, separate from crowdfunded) */
+  officialRewardText?: string;
+  /** Additional remarks / details */
+  remarks?: string;
+  /** Occupations */
+  occupations?: string[];
+  /** NCMEC-specific fields */
+  missingDate?: string;
+  missingAge?: string;
+  currentAge?: string;
+  circumstance?: string;
 }
 
 // ─── COLOR + INITIALS (same logic as before) ────────────────
@@ -75,7 +116,11 @@ export function generateVanitySlug(name: string): string {
 const CASE_FIELDS = `
   _id, name, slug, caseType, category, location, summary,
   source, sourceUrl, sourceId, leContact, imageUrl, dateAdded,
-  visible, featured, rewardNum, donors, color, initials, lastSynced, vanitySlug
+  visible, featured, rewardNum, donors, color, initials, lastSynced, vanitySlug,
+  images, aliases, sex, race, hair, eyes, height, weight, build, complexion,
+  scarsMarks, ageRange, datesOfBirth, placeOfBirth, nationality, languages,
+  caution, warningMessage, officialRewardText, remarks, occupations,
+  missingDate, missingAge, currentAge, circumstance
 `;
 
 /** All visible cases (for browse page) */

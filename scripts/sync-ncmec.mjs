@@ -91,13 +91,10 @@ function uniqueVanity(name) {
 async function smartUpsert(id, sourceData, name) {
   const exists = await sanity.fetch(`count(*[_id == $id])`, { id });
   if (exists > 0) {
+    const { visible, featured, rewardNum, donors, vanitySlug, ...patchable } = sourceData;
     await sanity.patch(id).set({
-      name: sourceData.name, slug: sourceData.slug,
-      caseType: sourceData.caseType, category: sourceData.category,
-      location: sourceData.location, summary: sourceData.summary,
-      sourceUrl: sourceData.sourceUrl, leContact: sourceData.leContact,
-      imageUrl: sourceData.imageUrl, color: sourceData.color,
-      initials: sourceData.initials, lastSynced: new Date().toISOString(),
+      ...patchable,
+      lastSynced: new Date().toISOString(),
     }).commit();
   } else {
     await sanity.create({
@@ -105,6 +102,34 @@ async function smartUpsert(id, sourceData, name) {
       visible: true, featured: false, rewardNum: 0, donors: 0,
       vanitySlug: uniqueVanity(name), lastSynced: new Date().toISOString(),
     });
+  }
+}
+
+// ── NCMEC Detail Endpoint ──
+const DETAIL_URL = "https://api.missingkids.org/missingkids/servlet/JSONDataServlet";
+
+async function fetchCaseDetail(caseNum) {
+  try {
+    const params = new URLSearchParams({
+      action: "childDetail",
+      orgPrefix: "NCMC",
+      caseNum: String(caseNum),
+      seqNum: "1",
+      caseLang: "en_US",
+      searchLang: "en_US",
+      LanguageId: "en_US",
+    });
+    const res = await fetch(`${DETAIL_URL}?${params}`, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "RaiseTheReward/1.0",
+      },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.childBean ?? data.child ?? data;
+  } catch {
+    return null;
   }
 }
 
@@ -239,11 +264,12 @@ async function sync() {
     return;
   }
 
-  // Step 2: Upsert into Sanity
-  console.log("  Step 2: Importing into Sanity...\n");
+  // Step 2: Fetch detail + upsert into Sanity
+  console.log("  Step 2: Fetching case details and importing...\n");
   let imported = 0;
   let skipped = 0;
   let errors = 0;
+  let detailFetched = 0;
   const itemArray = [...allItems.values()];
 
   for (let i = 0; i < itemArray.length; i++) {
@@ -253,9 +279,33 @@ async function sync() {
     const id = item.caseNum ? `ncmec-${item.caseNum}` : `ncmec-${slugify(item.name)}`;
     const slug = slugify(item.name);
 
+    // Try to get richer detail from the JSON endpoint
+    let detail = null;
+    if (item.caseNum) {
+      detail = await fetchCaseDetail(item.caseNum);
+      if (detail) detailFetched++;
+      await new Promise(r => setTimeout(r, 100)); // Be respectful
+    }
+
+    const strip = (html) => html ? html.replace(/<[^>]*>/g, "").trim() : "";
+
+    // Build summary from detail or RSS
     let summary = `${item.name} has been missing since ${item.missingDate || "unknown date"}.`;
     if (item.age) summary += ` Current age: ${item.age}.`;
     if (item.location) summary += ` Last seen in ${item.location}.`;
+    if (detail?.circumstance) summary += " " + strip(detail.circumstance).slice(0, 400);
+
+    // Multiple images from detail
+    const images = [];
+    if (item.imageUrl) images.push({ url: item.imageUrl, caption: "Primary" });
+    if (detail?.imgLrg) {
+      const url = detail.imgLrg.startsWith("http") ? detail.imgLrg : `https://api.missingkids.org${detail.imgLrg}`;
+      if (url !== item.imageUrl) images.push({ url, caption: "Large" });
+    }
+    if (detail?.imgMed) {
+      const url = detail.imgMed.startsWith("http") ? detail.imgMed : `https://api.missingkids.org${detail.imgMed}`;
+      if (!images.find(i => i.url === url)) images.push({ url, caption: "Medium" });
+    }
 
     try {
       await smartUpsert(id, {
@@ -264,7 +314,7 @@ async function sync() {
         caseType: "Missing Person",
         category: "Missing Child",
         location: item.location || "United States",
-        summary,
+        summary: summary.slice(0, 1000),
         source: "NCMEC",
         sourceUrl: item.link || `https://www.missingkids.org/poster/NCMC/${item.caseNum}`,
         sourceId: item.caseNum,
@@ -273,6 +323,18 @@ async function sync() {
         dateAdded: item.missingDate || new Date().toISOString().split("T")[0],
         color: nameToColor(item.name),
         initials: getInitials(item.name),
+        // ── Expanded fields from detail ──
+        images: images.length > 0 ? images : undefined,
+        sex: detail?.sex ?? "",
+        race: detail?.race ?? "",
+        hair: detail?.hairColor ?? "",
+        eyes: detail?.eyeColor ?? "",
+        height: detail?.heightInInches ? `${Math.floor(detail.heightInInches / 12)}'${detail.heightInInches % 12}"` : "",
+        weight: detail?.weight ? `${detail.weight} lbs` : "",
+        missingDate: detail?.missingDate ?? item.missingDate ?? "",
+        missingAge: detail?.missingAge ? String(detail.missingAge) : "",
+        currentAge: detail?.approxAge ? String(detail.approxAge) : item.age ?? "",
+        circumstance: strip(detail?.circumstance ?? "").slice(0, 800),
       }, item.name);
       imported++;
     } catch (err) {
@@ -286,9 +348,10 @@ async function sync() {
   }
 
   console.log(`\n\n========================================`);
-  console.log(`  Imported: ${imported}`);
-  console.log(`  Skipped:  ${skipped}`);
-  console.log(`  Errors:   ${errors}`);
+  console.log(`  Imported:        ${imported}`);
+  console.log(`  Detail fetched:  ${detailFetched}`);
+  console.log(`  Skipped:         ${skipped}`);
+  console.log(`  Errors:          ${errors}`);
   console.log(`========================================\n`);
 
   if (imported > 0) {
